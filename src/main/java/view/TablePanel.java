@@ -4,6 +4,7 @@ import model.ProgramInfo;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 import java.net.URL;
 import java.util.List;
 
@@ -26,6 +27,7 @@ public class TablePanel extends JPanel {
     public TablePanel() {
         tModel = new DefaultTableModel(rows, columnNames);
         table = new JTable(tModel);
+        table.setDefaultRenderer(Object.class, new CustomRenderer(tModel));
         //table.setDefaultEditor(Object.class, new TableEditor());
         JScrollPane scrollPane = new JScrollPane(table);
         scrollPane.setHorizontalScrollBarPolicy(
@@ -51,6 +53,9 @@ public class TablePanel extends JPanel {
      */
     public void renderOldPrograms() {
         //TODO implements rendering.
+        for (int i = 0; i < tModel.getRowCount(); i++) {
+
+        }
     }
 
     public void refreshMyTable(List<ProgramInfo> pList) {
@@ -71,4 +76,6 @@ public class TablePanel extends JPanel {
         time = time + " : " + (end.substring(end.indexOf('T') + 1, end.indexOf('T') + 6));
         return time;
     }
+
+
 }
