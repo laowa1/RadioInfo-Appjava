@@ -1,8 +1,10 @@
 package view;
 
+import com.sun.jndi.toolkit.url.Uri;
 import model.ProgramInfo;
 import javax.swing.*;
 import java.awt.*;
+import java.net.URL;
 
 /**
  * Infopanel for showing description and image.
@@ -12,7 +14,7 @@ import java.awt.*;
  * @author Jakob Fridesjö
  */
 
-class InfoPanel extends JPanel {
+public class InfoPanel extends JPanel {
     private ImageIcon image;
     private final JLabel label;
     private JTextArea info;

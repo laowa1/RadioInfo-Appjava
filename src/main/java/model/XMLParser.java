@@ -93,7 +93,7 @@ public class XMLParser {
                 if (n.getNodeType() == Node.ELEMENT_NODE) {
                     try {
                         Element e2 = (Element) n;
-                        ProgramInfo pI = new ProgramInfo(e.getAttribute("title"));
+                        ProgramInfo pI = new ProgramInfo(e2.getElementsByTagName("title").item(0).getTextContent());
                         //pI.setId(Integer.parseInt(e.getElementsByTagName("episodeid").item(0).getTextContent()));
                         pI.setTagLine(e2.getElementsByTagName("description").item(0).getTextContent());
                         if (e2.getElementsByTagName("imageurl").getLength() > 0) {

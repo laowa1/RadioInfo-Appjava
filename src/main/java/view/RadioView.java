@@ -16,7 +16,7 @@ public class RadioView extends JFrame {
     private static final long serialVersionUID = -471689426345376977L;
     private final int F_WIDTH = 500; //Minimum 400
     private final int F_HEIGHT = 640; //Minimum 400
-    private final JMenuBar menuBar;
+    private final MenuBar menuBar;
     private JPanel northPanel;
     private JPanel centerPanel;
     private JPanel southPanel;
@@ -61,11 +61,19 @@ public class RadioView extends JFrame {
     }
 
     /**
-     * Non-implemented listener function.
-     * @param l listener
+     * Gets menuBar.
      */
+
+    public MenuBar getMyMenuBar() {
+        return menuBar;
+    }
+
     public void setListeners(ActionListener l){
         menuBar.addMouseListener((MouseListener) l);
         //table.addActionListener(l);
+    }
+
+    public TablePanel getMyTable() {
+        return (TablePanel) centerPanel;
     }
 }

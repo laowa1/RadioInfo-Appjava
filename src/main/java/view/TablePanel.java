@@ -4,6 +4,7 @@ import model.ProgramInfo;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -50,5 +51,24 @@ public class TablePanel extends JPanel {
      */
     public void renderOldPrograms() {
         //TODO implements rendering.
+    }
+
+    public void refreshMyTable(List<ProgramInfo> pList) {
+        for (int i = 0; i < tModel.getRowCount(); i++) {
+            tModel.removeRow(i);
+        }
+        for (int i = 0; i < pList.size(); i++) {
+            tModel.addRow(new Object[] {pList.get(i).getName(),
+                                        parseTimes(pList.get(i).getStartTimeUTC(),
+                                                   pList.get(i).getEndTimeUTC())});
+        }
+    }
+
+    private String parseTimes(String start, String end) {
+        System.out.println(start);
+        System.out.println(end);
+        String time = start.substring(start.indexOf('T') + 1, start.indexOf('T') + 6);
+        time = time + " : " + (end.substring(end.indexOf('T') + 1, end.indexOf('T') + 6));
+        return time;
     }
 }

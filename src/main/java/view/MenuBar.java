@@ -5,6 +5,7 @@ import model.ChannelInfo;
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -16,26 +17,22 @@ import java.util.List;
  */
 public class MenuBar extends JMenuBar {
 
+    private List<JMenuItem> itemList;
     private final JMenu channelMenu;
-
+    private JMenuItem refresh;
     /**
      * Constructs the basic menu.
      */
     public MenuBar() {
+        itemList = new ArrayList<>();
         JMenu menu = new JMenu("Meny");
         channelMenu = new JMenu("Kanaler");
-        JMenuItem menuItem = new JMenuItem("Uppdatera");
+        refresh = new JMenuItem("Uppdatera");
         //menuItem.addMenuKeyListener(new ControllClass(this, 'm'));
+        //refresh.addActionListener(e -> System.out.println(e.getActionCommand()));
         menu.add(channelMenu);
-        menu.add(menuItem);
+        menu.add(refresh);
         add(menu);
-    }
-
-    /**
-     * Deprecated debug function.
-     */
-    private void addListeners() {
-
     }
 
     /**
@@ -46,7 +43,8 @@ public class MenuBar extends JMenuBar {
         for (ChannelInfo c : cList) {
             JMenuItem cItem = new JMenuItem(c.getName());
             channelMenu.add(new JMenuItem(c.getName()));
-            cItem.addActionListener(e -> System.out.println(e.getActionCommand()));
+            //cItem.addActionListener(e -> System.out.println(e.getActionCommand()));
+            itemList.add(cItem);
         }
     }
 
@@ -57,7 +55,13 @@ public class MenuBar extends JMenuBar {
     public void addChannel(ChannelInfo cI) {
         JMenuItem cItem = new JMenuItem((cI.getName()));
         channelMenu.add(cItem);
-        cItem.addActionListener(e -> System.out.println(e.getActionCommand()));
+        //AItem.addActionListener(e -> System.out.println(e.getActionCommand()));
+        itemList.add(cItem);
     }
-
+    public void addListenersToMenu(ActionListener a) {
+        for (int i = 0; i < itemList.size(); i++) {
+            itemList.get(i).addActionListener(a);
+        }
+        refresh.addActionListener(a);
+    }
 }

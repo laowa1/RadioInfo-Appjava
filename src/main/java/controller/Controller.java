@@ -1,11 +1,13 @@
 package controller;
 
 import model.ChannelInfo;
+import model.ProgramInfo;
 import model.XMLParser;
 import view.MenuBar;
 import view.RadioView;
 
-import java.beans.PropertyChangeListener;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
@@ -26,6 +28,7 @@ public class Controller {
     private XMLParser xml;
     private ChannelWorker cWorker;
     private ProgramWorker pWorker;
+    private boolean listen = false;
 
 
     public void setList(List<ChannelInfo> cList) {
@@ -48,6 +51,10 @@ public class Controller {
             pWorker.execute();
         } else {
             System.out.println("Not done");
+        }
+        if (!listen) {
+            addListeners();
+            listen = true;
         }
     }
 
@@ -76,5 +83,26 @@ public class Controller {
                 programWorker();
             }
         }, 0, 3600000);
+    }
+
+    private void addListeners() {
+        view.getMyMenuBar().addListenersToMenu(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                if (e.getActionCommand() == "Uppdatera") {
+                    programWorker();
+                } else {
+                    //TODO Implement channel loading
+                    for (int i = 0; i < cList.size(); i++) {
+                        if (cList.get(i).getName() == e.getActionCommand()) {
+                            refreshTable(cList.get(i).getProgramList());
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    private void refreshTable(List<ProgramInfo> pList) {
+        view.getMyTable().refreshMyTable(pList);
     }
 }
