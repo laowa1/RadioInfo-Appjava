@@ -6,6 +6,8 @@ import model.XMLParser;
 import view.MenuBar;
 import view.RadioView;
 
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
@@ -53,7 +55,7 @@ public class Controller {
             System.out.println("Not done");
         }
         if (!listen) {
-            addListeners();
+            addListenersToMenu();
             listen = true;
         }
     }
@@ -85,17 +87,15 @@ public class Controller {
         }, 0, 3600000);
     }
 
-    private void addListeners() {
-        view.getMyMenuBar().addListenersToMenu(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
-                if (e.getActionCommand() == "Uppdatera") {
-                    programWorker();
-                } else {
-                    //TODO Implement channel loading
-                    for (int i = 0; i < cList.size(); i++) {
-                        if (cList.get(i).getName() == e.getActionCommand()) {
-                            refreshTable(cList.get(i).getProgramList());
-                        }
+    private void addListenersToMenu() {
+        view.getMyMenuBar().addListenersToMenu(e -> {
+            if (e.getActionCommand() == "Uppdatera") {
+                programWorker();
+            } else {
+                //TODO Implement channel loading
+                for (int i = 0; i < cList.size(); i++) {
+                    if (cList.get(i).getName() == e.getActionCommand()) {
+                        refreshTable(cList.get(i).getProgramList());
                     }
                 }
             }
@@ -103,6 +103,24 @@ public class Controller {
     }
 
     private void refreshTable(List<ProgramInfo> pList) {
-        view.getMyTable().refreshMyTable(pList);
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                view.getMyTable().refreshMyTable(pList);
+            }
+        }, 0, 60000);
+        addListenersToTable();
+    }
+
+    private void addListenersToTable() {
+        view.getMyTable().addListenersToTable(new ListSelectionListener() {
+            @Override
+            public void valueChanged(ListSelectionEvent lE) {
+                if (!lE.getValueIsAdjusting()) {
+
+                }
+            }
+        });
     }
 }
