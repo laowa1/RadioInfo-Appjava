@@ -49,9 +49,7 @@ public class ProgramInfo {
         return description;
     }
 
-    public void setImageURL(URL imageURL) {
-        this.imageURL = imageURL;
-    }
+    public void setImageURL(URL imageURL) { this.imageURL = imageURL; }
 
     public String getStartTimeUTC() {
         return startTimeUTC;

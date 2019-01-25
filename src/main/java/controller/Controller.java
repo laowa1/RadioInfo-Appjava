@@ -6,8 +6,6 @@ import model.XMLParser;
 import view.MenuBar;
 import view.RadioView;
 
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
@@ -26,14 +24,15 @@ import java.util.Timer;
 public class Controller {
     private final RadioView view;
     private List<ChannelInfo> cList;
-    private final String url = "http://api.sr.se/api/v2/channels?pagination=false";
     private XMLParser xml;
     private ChannelWorker cWorker;
-    private ProgramWorker pWorker;
     private boolean listen = false;
+    private boolean listen2 = false;
+    private String programName = null;
+    boolean switching = false;
 
 
-    public void setList(List<ChannelInfo> cList) {
+    public synchronized void setList(List<ChannelInfo> cList) {
         this.cList = cList;
     }
 
@@ -42,32 +41,29 @@ public class Controller {
      */
     public Controller() {
         view = new RadioView("RadioInfo");
-        channelWorker();
-        //view.setListeners(new Listeners());
+        view.startLoadingOverlay(true);
+        setTimer();
     }
 
-    private void programWorker() {
-        if (cWorker.done) {
+    public synchronized void programWorker() {
             xml.update();
-            pWorker = new ProgramWorker(xml, cList);
+            ProgramWorker pWorker = new ProgramWorker(xml, cList, this);
             pWorker.execute();
-        } else {
-            System.out.println("Not done");
-        }
-        if (!listen) {
-            addListenersToMenu();
-            listen = true;
-        }
     }
 
+    public synchronized void signalDone() {
+        boolean done = true;
+        view.stopLoadingOverlay();
+    }
     /**
      * Function that refreshes worker.
      */
-    private void channelWorker() {
+    private synchronized void channelWorker() {
         try {
+            view.startLoadingOverlay(true);
+            String url = "http://api.sr.se/api/v2/channels?pagination=false";
             xml = new XMLParser(new URL(url));
-            xml.parseToDoc();
-            this.cWorker = new ChannelWorker((MenuBar) view.getMenuBarInfo(), xml, this);
+            this.cWorker = new ChannelWorker(xml, this);
             cWorker.execute();
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -77,50 +73,76 @@ public class Controller {
     /**
      * Refreshes worker hourly.
      */
-    public void setTimer() {
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                programWorker();
-            }
-        }, 0, 3600000);
+    private synchronized void setTimer() {
+            Timer timer = new Timer();
+            timer.scheduleAtFixedRate(new TimerTask() {
+                @Override
+                public void run() {
+                    view.startLoadingOverlay(true);
+                    channelWorker();
+                }
+            }, 0, 240000);
     }
 
-    private void addListenersToMenu() {
+    private synchronized void addListenersToMenu() {
         view.getMyMenuBar().addListenersToMenu(e -> {
             if (e.getActionCommand() == "Uppdatera") {
-                programWorker();
+                view.startLoadingOverlay(false);
+                channelWorker();
             } else {
                 //TODO Implement channel loading
-                for (int i = 0; i < cList.size(); i++) {
-                    if (cList.get(i).getName() == e.getActionCommand()) {
-                        refreshTable(cList.get(i).getProgramList());
+                for (ChannelInfo channelInfo : cList) {
+                    if (channelInfo.getName() == e.getActionCommand()) {
+                        switching = true;
+                        programName = e.getActionCommand();
+                        view.setHeader(channelInfo.getImageURL());
+                        refreshTable(channelInfo.getProgramList());
+                        switching = false;
                     }
                 }
             }
         });
     }
 
-    private void refreshTable(List<ProgramInfo> pList) {
-        Timer timer = new Timer();
-        timer.scheduleAtFixedRate(new TimerTask() {
-            @Override
-            public void run() {
-                view.getMyTable().refreshMyTable(pList);
-            }
-        }, 0, 60000);
-        addListenersToTable();
+    private synchronized void refreshTable(List<ProgramInfo> pList) {
+        view.getMyTable().resetScrollPosition();
+        view.getMyTable().setpList(pList);
+        view.getMyTable().refreshMyTable();
+       // addListenersToTable();
+        if (!listen2) {
+            addTableListeners();
+            listen2 = true;
+        }
+        view.enableContent();
     }
 
-    private void addListenersToTable() {
-        view.getMyTable().addListenersToTable(new ListSelectionListener() {
-            @Override
-            public void valueChanged(ListSelectionEvent lE) {
-                if (!lE.getValueIsAdjusting()) {
+    private synchronized void addTableListeners() {
+        view.getMyTable().addListenersToTableV2(new TableSelectionListener(view.getMyTable().getTable(), this));
+    }
 
+    synchronized void setProgramInfo(int index) {
+        for (int i = 0; i < cList.size(); i++) {
+            if (cList.get(i).getName().equals(programName)) {
+                if (index <= cList.size()) {
+                    if (cList.get(i).getProgramList().get(index).getImageURL() != null) {
+                        view.getInfoPanel().setImage(cList.get(i).getProgramList().get(index).getImageURL());
+                    } else {
+                        view.getInfoPanel().setImage("/home/tfy17jfo/IdeaProjects/RadioInfo-Appjava/src/main/resources/textures/sr.jpg");
+                    }
+                    if (cList.get(i).getProgramList().get(index).getTagLine() != null) {
+                        view.getInfoPanel().setDescription(cList.get(i).getProgramList().get(index).getTagLine());
+                    } else {
+                        view.getInfoPanel().setDescription("Ingen information tillgänglig.");
+                    }
+                    break;
                 }
             }
-        });
+        }
+    }
+
+    synchronized public void signalChannelDone() {
+        view.getMyMenuBar().clearChannels();
+        view.getMyMenuBar().addChannels(cList);
+        addListenersToMenu();
     }
 }

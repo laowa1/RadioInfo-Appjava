@@ -11,6 +11,7 @@ import java.util.List;
  * @version 1.0
  * @author Jakob Fridesjö
  */
+@SuppressWarnings("unused")
 public class ChannelInfo {
     private Integer id;
     //private Image img;

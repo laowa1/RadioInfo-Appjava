@@ -5,6 +5,8 @@ import model.XMLParser;
 import view.MenuBar;
 
 import javax.swing.*;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.util.List;
 
 /**
@@ -16,7 +18,6 @@ import java.util.List;
  */
 class ChannelWorker extends SwingWorker<Boolean, ChannelInfo> {
 
-    private final MenuBar menuBar;
     private XMLParser xml;
     private List<ChannelInfo> cList;
     private Controller crl;
@@ -24,11 +25,11 @@ class ChannelWorker extends SwingWorker<Boolean, ChannelInfo> {
 
     /**
      * Constructs a worker for parsing channels.
-     * @param menuBar menu to add channels to.
-     * @param xml xml to parse.
+     * @param xml - xml to parse
+     * @param crl - controller instance
      */
-    ChannelWorker(MenuBar menuBar, XMLParser xml, Controller crl) {
-        this.menuBar = menuBar;
+    ChannelWorker(XMLParser xml, Controller crl) {
+        xml.parseToDoc();
         this.xml = xml;
         this.crl = crl;
     }
@@ -40,30 +41,20 @@ class ChannelWorker extends SwingWorker<Boolean, ChannelInfo> {
     @Override
     protected Boolean doInBackground() {
         this.cList = xml.parseChannels();
-        for (ChannelInfo cI : cList) {
-            publish(cI);
-        }
+        /*for (ChannelInfo cI : cList) {
+            System.out.println(cI.getName());
+            //publish(cI);
+        }*/
         return true;
-    }
-
-    /**
-     * Constantly updates menu with entries.
-     * @param cData list to add to menu
-     */
-    @Override
-    protected void process(List<ChannelInfo> cData) {
-        for (ChannelInfo cI : cData) {
-            this.menuBar.addChannel(cI);
-        }
     }
 
     /**
      * For getting the ChannelInfo list.
      * @return List with channels
      */
-    public List<ChannelInfo> getList() {
+/*    public List<ChannelInfo> getList() {
         return this.cList;
-    }
+    }*/
 
     /**
      * Sets timer when done.
@@ -72,6 +63,7 @@ class ChannelWorker extends SwingWorker<Boolean, ChannelInfo> {
     protected void done() {
         done = true;
         crl.setList(cList);
-        crl.setTimer();
+        crl.signalChannelDone();
+        crl.programWorker();
     }
 }

@@ -16,17 +16,19 @@ import java.util.List;
  * @version 1.0
  * @author Jakob Fridesjö
  */
-public class ProgramWorker extends SwingWorker {
+class ProgramWorker extends SwingWorker {
 
-    private XMLParser xml;
-    private List<ChannelInfo> cList;
+    private final XMLParser xml;
+    private final List<ChannelInfo> cList;
+    private final Controller controller;
 
     /**
      * Constructs an worker for programs.
      */
-    public ProgramWorker(XMLParser xml, List<ChannelInfo> cList) {
+    public ProgramWorker(XMLParser xml, List<ChannelInfo> cList, Controller c) {
         this.xml = xml;
         this.cList = cList;
+        this.controller = c;
     }
 
     @Override
@@ -53,4 +55,8 @@ public class ProgramWorker extends SwingWorker {
             this.menuBar.addChannel(cI);
         }
     }*/
+    @Override
+    protected void done() {
+        controller.signalDone();
+    }
 }

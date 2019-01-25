@@ -24,9 +24,8 @@ import java.util.List;
  */
 public class XMLParser {
     private List<ChannelInfo> cList;
-    private List<ProgramInfo> pList;
     Document doc = null;
-    private URL apiURL;
+    private final URL apiURL;
 
     /**
      * Constructs parser.
@@ -60,13 +59,6 @@ public class XMLParser {
     }
 
     /**
-     * Not implemented
-     */
-    private void updatePrograms() {
-        //TODO probably remove.
-    }
-
-    /**
      * Parses programs to list.
      * @param cI channel to parse from.
      * @throws IOException
@@ -78,12 +70,11 @@ public class XMLParser {
         DocumentBuilder db = dbf.newDocumentBuilder();
         //URL tempUrl = new URL()
         //System.out.println(cI.getScheduleURL().toString());
-        System.out.println(cI.getId());
         Document tempDoc = db.parse(cI.getScheduleURL().openStream());
         NodeList lTemp = tempDoc.getElementsByTagName("pagination");
         Element e = (Element) lTemp.item(0);
         int pages = Integer.parseInt(e.getElementsByTagName("totalpages").item(0).getTextContent());
-        pList = new ArrayList<>();
+        List<ProgramInfo> pList = new ArrayList<>();
         for (int j = 1; j < pages; j++) {
             URL tempURL = new URL(cI.getScheduleURL() + "&page=" + j);
             tempDoc = db.parse(tempURL.openStream());
@@ -150,9 +141,9 @@ public class XMLParser {
     public void update() {
         //TODO Implement in controller.
         if (apiURL != null) {
-            for (int i = 0; i < cList.size(); i++) {
-                if (cList.get(i).getProgramList() != null) {
-                    cList.get(i).getProgramList().clear();
+            for (ChannelInfo channelInfo : cList) {
+                if (channelInfo.getProgramList() != null) {
+                    channelInfo.getProgramList().clear();
                 }
             }
             this.parseToDoc();

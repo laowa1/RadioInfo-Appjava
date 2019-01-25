@@ -1,20 +1,16 @@
 package view;
 
+import controller.TableSelectionListener;
 import model.ProgramInfo;
 
 import javax.swing.*;
-import javax.swing.event.ListSelectionListener;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableCellRenderer;
+import javax.swing.table.TableColumn;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.geom.AffineTransform;
-import java.net.URL;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -25,12 +21,15 @@ import java.util.List;
  * @author Jakob Fridesjö
  */
 public class TablePanel extends JPanel {
-    DefaultTableModel tModel;
-    JTable table;
-    String columnNames[] = {"Program", "Startar", "Slutar"};
-    Object[][] rows = {};
-    private int scrollPosition;
-    private JScrollPane scrollPane;
+    private final DefaultTableModel tModel;
+    private final JTable table;
+    private final String[] columnNames = {"Program", "Startar", "Slutar"};
+    private final Object[][] rows = {};
+    private ListSelectionModel lModel;
+    private final JScrollPane scrollPane;
+    public int index;
+    private List<ProgramInfo> pList;
+    int scrollPosition = 0;
 
     /**
      * Constructs the table
@@ -39,89 +38,122 @@ public class TablePanel extends JPanel {
         tModel = new DefaultTableModel(rows, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
-            return false;
+                return false;
             }
         };
-
+        setLayout(new BorderLayout());
         table = new JTable(tModel);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setRowHeight(50);
+        table.setRowSelectionAllowed(true);
+        table.setCellSelectionEnabled(false);
+        table.setColumnSelectionAllowed(false);
         table.setDefaultRenderer(Object.class, new CellRenderer());
         //table.setDefaultEditor(Object.class, new TableEditor());
         scrollPane = new JScrollPane(table);
         scrollPane.setHorizontalScrollBarPolicy(
                                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
         table.setFillsViewportHeight(true);
-        this.add(scrollPane);
+        table.setTableHeader(null);
+        this.add(scrollPane, BorderLayout.CENTER);
     }
 
+    public void setpList(List<ProgramInfo> pList) {
+        this.pList = pList;
+    }
     /**
-     * Updates the table.
-     * @param pList
+     * Refreshes the table with new information.
      */
-    public void updateTable(List<ProgramInfo> pList) {
-        for (ProgramInfo pI : pList) {
-            String date = pI.getStartTimeUTC() + pI.getEndTimeUTC();
-            tModel.addRow(new Object[]{pI.getName(), date});
-        }
-    }
-
-    /**
-     * Non-implemented function for showing which programs
-     * have already expired.
-     */
-    public void renderOldPrograms() {
-        //TODO implements rendering.
-        for (int i = 0; i < tModel.getRowCount(); i++) {
-
-        }
-    }
-
-    public void refreshMyTable(List<ProgramInfo> pList) {
+    public void refreshMyTable() {
+        table.removeAll();
         scrollPosition = scrollPane.getVerticalScrollBar().getValue();
         try {
             tModel.setRowCount(0);
-            for (int i = 0; i < pList.size(); i++) {
-                tModel.addRow(new Object[]{pList.get(i).getName(),
-                        pList.get(i).getStartTimeUTC(),
-                        pList.get(i).getEndTimeUTC()});
+            for (ProgramInfo programInfo : pList) {
+                tModel.addRow(new Object[]{programInfo.getName(),
+                        programInfo.getStartTimeUTC(),
+                        programInfo.getEndTimeUTC()});
                 //parseTimes(pList.get(i).getStartTimeUTC(),
                 //         pList.get(i).getEndTimeUTC())});
+            }
+            table.setGridColor(new Color(150, 220, 220, 120));
+            //table.setIntercellSpacing(new Dimension(0,0));
+            TableColumn column;
+            for (int i = 0; i < 3; i++) {
+                column = table.getColumnModel().getColumn(i);
+                if (i > 0) {
+                    column.setPreferredWidth(50); //third column is bigger
+                } else {
+                    column.setPreferredWidth(300);
+                }
             }
         } finally {
             scrollPane.getVerticalScrollBar().setValue(scrollPosition);
         }
     }
 
-    public void addListenersToTable(ListSelectionListener l) {
-        for (int i = 0; i < tModel.getRowCount(); i++) {
-            table.getSelectionModel().addListSelectionListener(l);
-        }
+    /**
+     * Adds listeners to the table.
+     * @param l listener to add.
+     */
+    public void addListenersToTableV2(TableSelectionListener l) {
+        lModel = table.getSelectionModel();
+        lModel.addListSelectionListener(l);
     }
 
-    public class CellRenderer implements TableCellRenderer {
+    /**
+     * Gets the table
+     * @return table.
+     */
+    public JTable getTable() {
+        return table;
+    }
+
+    public void resetScrollPosition() {
+        scrollPosition = 0;
+    }
+
+
+    /**
+     * Class for rendering the cells of the table.
+     */
+    private class CellRenderer implements TableCellRenderer {
 
         public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
                                                        boolean hasFocus, int row, int column) {
+
+
             DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
             DateTimeFormatter formatter2 = DateTimeFormatter.ISO_TIME;
             JTextField editor = new JTextField();
             LocalDateTime time = LocalDateTime.now();
-            Font myFont = new Font(Font.MONOSPACED, Font.BOLD, 13).deriveFont(
-                    AffineTransform.getScaleInstance(0.8, 1d));
+            Font myFont = new Font(Font.MONOSPACED, Font.BOLD, 14).deriveFont(
+                    AffineTransform.getScaleInstance(0.9, 1d));
             editor.setFont(myFont);
+            editor.setOpaque(true);
             //System.out.println(value);
             if (column > 0 && value != null && value.toString().length() > 13) {
                 LocalDateTime timeValue = LocalDateTime.parse(value.toString(), formatter);
                 String timeText = timeValue.format(formatter2);
-
+                editor.setBounds(new Rectangle(table.getWidth()/6, table.getRowHeight()));
+                final String substring = timeText.substring(0, timeText.length() - 3);
                 if (time.isAfter(timeValue)) {
-                    editor.setBackground(new Color(200, 110, 95));
+                    editor.setBackground(new Color(210, 120, 105, 200));
+                    table.repaint();
+                    editor.setText('(' + substring + ')');
                 }
                 else {
-                    editor.setBackground(new Color(170, 200, 100));
+                    editor.setBackground(new Color(180, 210, 100, 200));
+                    table.repaint();
+                    editor.setText(substring);
                 }
-                editor.setText(timeText.substring(0, timeText.length() - 3));
             } else if (value != null) {
+                if ((row % 2) == 0) {
+                    //editor.setBackground(new Color(100, 10, 10, 50));
+                } else {
+                    editor.setBackground(new Color(150, 220, 220, 120));
+                    table.repaint();
+                }
                 editor.setText(value.toString());
             }
             return editor;

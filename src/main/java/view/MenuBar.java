@@ -3,7 +3,8 @@ package view;
 import model.ChannelInfo;
 
 import javax.swing.*;
-import java.awt.event.ActionEvent;
+import javax.swing.event.MenuKeyListener;
+import javax.swing.event.MenuListener;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
@@ -17,13 +18,14 @@ import java.util.List;
  */
 public class MenuBar extends JMenuBar {
 
-    private List<JMenuItem> itemList;
+    private final List<JMenuItem> itemList;
     private final JMenu channelMenu;
-    private JMenuItem refresh;
+    private final JMenuItem refresh;
+
     /**
      * Constructs the basic menu.
      */
-    public MenuBar() {
+    MenuBar() {
         itemList = new ArrayList<>();
         JMenu menu = new JMenu("Meny");
         channelMenu = new JMenu("Kanaler");
@@ -36,19 +38,6 @@ public class MenuBar extends JMenuBar {
     }
 
     /**
-     * Adds list of channels to menu.
-     * @param cList list to add.
-     */
-    public void add(List<ChannelInfo> cList) {
-        for (ChannelInfo c : cList) {
-            JMenuItem cItem = new JMenuItem(c.getName());
-            channelMenu.add(new JMenuItem(c.getName()));
-            //cItem.addActionListener(e -> System.out.println(e.getActionCommand()));
-            itemList.add(cItem);
-        }
-    }
-
-    /**
      * Adds single channel to menu.
      * @param cI channel to add.
      */
@@ -58,10 +47,39 @@ public class MenuBar extends JMenuBar {
         //AItem.addActionListener(e -> System.out.println(e.getActionCommand()));
         itemList.add(cItem);
     }
+
+    /**
+     * Adds list of channels to menu.
+     * @param cList channel to add.
+     */
+    public void addChannels(List<ChannelInfo> cList) {
+        for (int i = 0; i < cList.size(); i++) {
+            JMenuItem cItem = new JMenuItem((cList.get(i).getName()));
+            channelMenu.add(cItem);
+            itemList.add(cItem);
+        }
+    }
+
+    /**
+     * Adds listeners to the menu.
+     * @param a ActionListener
+     */
     public void addListenersToMenu(ActionListener a) {
-        for (int i = 0; i < itemList.size(); i++) {
-            itemList.get(i).addActionListener(a);
+        MenuListener[] listeners = this.channelMenu.getMenuListeners();
+        for (int i = 0; i < listeners.length; i++) {
+            this.channelMenu.removeMenuListener(listeners[i]);
+        }
+        MenuKeyListener[] refreshListener = refresh.getMenuKeyListeners();
+        for (int i = 0; i < refreshListener.length; i++) {
+            refresh.removeMenuKeyListener(refreshListener[i]);
+        }
+        for (JMenuItem jMenuItem : itemList) {
+            jMenuItem.addActionListener(a);
         }
         refresh.addActionListener(a);
+    }
+
+    public void clearChannels() {
+        this.channelMenu.removeAll();
     }
 }
