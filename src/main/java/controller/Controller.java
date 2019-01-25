@@ -3,14 +3,12 @@ package controller;
 import model.ChannelInfo;
 import model.ProgramInfo;
 import model.XMLParser;
-import view.MenuBar;
 import view.RadioView;
 
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.List;
+import java.util.Objects;
 import java.util.TimerTask;
 import java.util.Timer;
 
@@ -25,8 +23,6 @@ public class Controller {
     private final RadioView view;
     private List<ChannelInfo> cList;
     private XMLParser xml;
-    private ChannelWorker cWorker;
-    private boolean listen = false;
     private boolean listen2 = false;
     private String programName = null;
     boolean switching = false;
@@ -52,7 +48,6 @@ public class Controller {
     }
 
     public synchronized void signalDone() {
-        boolean done = true;
         view.stopLoadingOverlay();
     }
     /**
@@ -63,7 +58,7 @@ public class Controller {
             view.startLoadingOverlay(true);
             String url = "http://api.sr.se/api/v2/channels?pagination=false";
             xml = new XMLParser(new URL(url));
-            this.cWorker = new ChannelWorker(xml, this);
+            ChannelWorker cWorker = new ChannelWorker(xml, this);
             cWorker.execute();
         } catch (MalformedURLException e) {
             e.printStackTrace();
@@ -86,13 +81,13 @@ public class Controller {
 
     private synchronized void addListenersToMenu() {
         view.getMyMenuBar().addListenersToMenu(e -> {
-            if (e.getActionCommand() == "Uppdatera") {
+            if (Objects.equals(e.getActionCommand(), "Uppdatera")) {
                 view.startLoadingOverlay(false);
                 channelWorker();
             } else {
                 //TODO Implement channel loading
                 for (ChannelInfo channelInfo : cList) {
-                    if (channelInfo.getName() == e.getActionCommand()) {
+                    if (Objects.equals(channelInfo.getName(), e.getActionCommand())) {
                         switching = true;
                         programName = e.getActionCommand();
                         view.setHeader(channelInfo.getImageURL());

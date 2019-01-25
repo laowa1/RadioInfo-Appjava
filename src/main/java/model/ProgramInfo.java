@@ -12,7 +12,7 @@ import java.net.URL;
 
 public class ProgramInfo {
 
-    private Integer id;
+    //private Integer id;
     //private Image img;
     private String startTimeUTC;
     private String endTimeUTC;
@@ -25,9 +25,11 @@ public class ProgramInfo {
         this.name = name;
     }
 
-    public Integer getId() {
-        return id;
-    }
+// --Commented out by Inspection START (2019-01-25 22:29):
+//    public Integer getId() {
+//        return id;
+//    }
+// --Commented out by Inspection STOP (2019-01-25 22:29)
 
     public String getName() {
         return name;
@@ -37,9 +39,11 @@ public class ProgramInfo {
         return imageURL;
     }
 
-    public void setId(Integer id) {
-        this.id = id;
-    }
+// --Commented out by Inspection START (2019-01-25 22:29):
+//    public void setId(Integer id) {
+//        this.id = id;
+//    }
+// --Commented out by Inspection STOP (2019-01-25 22:29)
 
     public void setTagLine(String tagLine) {
         this.description = tagLine;

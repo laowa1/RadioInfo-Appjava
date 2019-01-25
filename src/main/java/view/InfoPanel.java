@@ -16,8 +16,8 @@ import java.net.URL;
  * @author Jakob Fridesjö
  */
 
+
 public class InfoPanel extends JPanel {
-    private ImageIcon image;
     private final JLabel label;
     private final JTextArea info;
 
@@ -94,6 +94,7 @@ public class InfoPanel extends JPanel {
         }
     }
 
+    @SuppressWarnings("SameParameterValue")
     private ImageIcon scaleV2(BufferedImage bufImg, int w, int h, boolean fast){
         Image render;
         if (fast) {
@@ -104,6 +105,7 @@ public class InfoPanel extends JPanel {
         return new ImageIcon(render);
     }
 
+    @SuppressWarnings("SameParameterValue")
     private ImageIcon scaleV1(Image img, int w, int h, boolean fast){
         BufferedImage scaledImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = scaledImg.createGraphics();

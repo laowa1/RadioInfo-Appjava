@@ -41,20 +41,24 @@ class ProgramWorker extends SwingWorker {
         return true;
     }
 
-    /**
-     * For getting list.
-     * @return list
-     */
-    public List<ChannelInfo> getList() {
-        return cList;
-    }
-    /*
-    @Override
-    protected void process(List<ChannelInfo> cData) {
-        for (ChannelInfo cI : cData) {
-            this.menuBar.addChannel(cI);
-        }
-    }*/
+// --Commented out by Inspection START (2019-01-25 22:29):
+//    /**
+//     * For getting list.
+//     * @return list
+//     */
+//    public List<ChannelInfo> getList() {
+//        return cList;
+//    }
+
+//    /*
+//    @Override
+//    protected void process(List<ChannelInfo> cData) {
+//        for (ChannelInfo cI : cData) {
+//            this.menuBar.addChannel(cI);
+//        }
+//    }
+// --Commented out by Inspection STOP (2019-01-25 22:29)
+
     @Override
     protected void done() {
         controller.signalDone();

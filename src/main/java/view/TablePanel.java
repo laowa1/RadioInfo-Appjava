@@ -20,21 +20,21 @@ import java.util.List;
  * @version 1.0
  * @author Jakob Fridesjö
  */
+@SuppressWarnings("ALL")
 public class TablePanel extends JPanel {
     private final DefaultTableModel tModel;
     private final JTable table;
-    private final String[] columnNames = {"Program", "Startar", "Slutar"};
-    private final Object[][] rows = {};
-    private ListSelectionModel lModel;
     private final JScrollPane scrollPane;
     public int index;
     private List<ProgramInfo> pList;
-    int scrollPosition = 0;
+    private int scrollPosition = 0;
 
     /**
      * Constructs the table
      */
     public TablePanel() {
+        Object[][] rows = {};
+        String[] columnNames = {"Program", "Startar", "Slutar"};
         tModel = new DefaultTableModel(rows, columnNames) {
             @Override
             public boolean isCellEditable(int row, int column) {
@@ -97,7 +97,7 @@ public class TablePanel extends JPanel {
      * @param l listener to add.
      */
     public void addListenersToTableV2(TableSelectionListener l) {
-        lModel = table.getSelectionModel();
+        ListSelectionModel lModel = table.getSelectionModel();
         lModel.addListSelectionListener(l);
     }
 
@@ -149,8 +149,6 @@ public class TablePanel extends JPanel {
                 }
             } else if (value != null) {
                 if ((row % 2) == 0) {
-                    //editor.setBackground(new Color(100, 10, 10, 50));
-                } else {
                     editor.setBackground(new Color(150, 220, 220, 120));
                     table.repaint();
                 }

@@ -2,11 +2,8 @@ package controller;
 
 import model.ChannelInfo;
 import model.XMLParser;
-import view.MenuBar;
 
 import javax.swing.*;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.List;
 
 /**
@@ -18,10 +15,9 @@ import java.util.List;
  */
 class ChannelWorker extends SwingWorker<Boolean, ChannelInfo> {
 
-    private XMLParser xml;
+    private final XMLParser xml;
     private List<ChannelInfo> cList;
-    private Controller crl;
-    public boolean done = false;
+    private final Controller crl;
 
     /**
      * Constructs a worker for parsing channels.
@@ -48,20 +44,21 @@ class ChannelWorker extends SwingWorker<Boolean, ChannelInfo> {
         return true;
     }
 
-    /**
-     * For getting the ChannelInfo list.
-     * @return List with channels
-     */
-/*    public List<ChannelInfo> getList() {
-        return this.cList;
-    }*/
+// --Commented out by Inspection START (2019-01-25 22:33):
+//    /**
+//     * For getting the ChannelInfo list.
+//     * @return List with channels
+//     */
+//    public List<ChannelInfo> getList() {
+//        return this.cList;
+//    }
+// --Commented out by Inspection STOP (2019-01-25 22:33)
 
     /**
      * Sets timer when done.
      */
     @Override
     protected void done() {
-        done = true;
         crl.setList(cList);
         crl.signalChannelDone();
         crl.programWorker();

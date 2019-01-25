@@ -22,6 +22,7 @@ import java.util.List;
  * @version 1.0
  * @author Jakob Fridesjö
  */
+
 public class XMLParser {
     private List<ChannelInfo> cList;
     Document doc = null;
@@ -49,21 +50,23 @@ public class XMLParser {
         }
     }
 
-    /**
-     * Dummy for debugging.
-     */
-    public void print() {
-        for (int i = 0; i < doc.getElementsByTagName("channels").getLength(); i++) {
-            System.out.println(doc.getChildNodes().item(i).getTextContent());
-        }
-    }
+// --Commented out by Inspection START (2019-01-25 22:32):
+//    /**
+//     * Dummy for debugging.
+//     */
+//    public void print() {
+//        for (int i = 0; i < doc.getElementsByTagName("channels").getLength(); i++) {
+//            System.out.println(doc.getChildNodes().item(i).getTextContent());
+//        }
+//    }
+// --Commented out by Inspection STOP (2019-01-25 22:32)
 
     /**
      * Parses programs to list.
      * @param cI channel to parse from.
-     * @throws IOException
-     * @throws ParserConfigurationException
-     * @throws SAXException
+     * @throws IOException IO failure
+     * @throws ParserConfigurationException Parser fault in config
+     * @throws SAXException Exception in parsing
      */
     public void parseProgram(ChannelInfo cI) throws IOException, ParserConfigurationException, SAXException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();

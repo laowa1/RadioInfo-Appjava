@@ -41,6 +41,7 @@ public class MenuBar extends JMenuBar {
      * Adds single channel to menu.
      * @param cI channel to add.
      */
+    @SuppressWarnings("unused")
     public void addChannel(ChannelInfo cI) {
         JMenuItem cItem = new JMenuItem((cI.getName()));
         channelMenu.add(cItem);
@@ -53,8 +54,8 @@ public class MenuBar extends JMenuBar {
      * @param cList channel to add.
      */
     public void addChannels(List<ChannelInfo> cList) {
-        for (int i = 0; i < cList.size(); i++) {
-            JMenuItem cItem = new JMenuItem((cList.get(i).getName()));
+        for (ChannelInfo channelInfo : cList) {
+            JMenuItem cItem = new JMenuItem((channelInfo.getName()));
             channelMenu.add(cItem);
             itemList.add(cItem);
         }
@@ -66,12 +67,12 @@ public class MenuBar extends JMenuBar {
      */
     public void addListenersToMenu(ActionListener a) {
         MenuListener[] listeners = this.channelMenu.getMenuListeners();
-        for (int i = 0; i < listeners.length; i++) {
-            this.channelMenu.removeMenuListener(listeners[i]);
+        for (MenuListener listener : listeners) {
+            this.channelMenu.removeMenuListener(listener);
         }
         MenuKeyListener[] refreshListener = refresh.getMenuKeyListeners();
-        for (int i = 0; i < refreshListener.length; i++) {
-            refresh.removeMenuKeyListener(refreshListener[i]);
+        for (MenuKeyListener menuKeyListener : refreshListener) {
+            refresh.removeMenuKeyListener(menuKeyListener);
         }
         for (JMenuItem jMenuItem : itemList) {
             jMenuItem.addActionListener(a);

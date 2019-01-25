@@ -2,8 +2,6 @@ package view;
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
-import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
@@ -15,6 +13,7 @@ import java.net.URL;
  * @version 1.0
  * @author Jakob Fridesjö
  */
+@SuppressWarnings("SameParameterValue")
 public class RadioView extends JFrame {
 
     private static final long serialVersionUID = -471689426345376977L;
@@ -40,8 +39,8 @@ public class RadioView extends JFrame {
         glassPane.setSize(f_WIDTH, f_HEIGHT);
         glassPane.setLayout(new BorderLayout());
         JLabel glassLabel1 = new JLabel(new ImageIcon("/home/tfy17jfo/IdeaProjects/RadioInfo-Appjava/src/main/resources/textures/loading.gif"));
-        JTextField glassText = new JTextField("Loading...");
-       /* glassText.setFont(new Font("Sans", Font.PLAIN, 40));
+        /*JTextField glassText = new JTextField("Loading...");
+        glassText.setFont(new Font("Sans", Font.PLAIN, 40));
         glassText.setHorizontalAlignment(JTextField.CENTER);
         glassText.setEditable(false);
         glassText.setOpaque(false);
@@ -85,13 +84,15 @@ public class RadioView extends JFrame {
         southPanel.setPreferredSize(new Dimension(400,300));
     }
 
-    /**
-     * Gets the menuBar.
-     * @return menuBar
-     */
-    public JMenuBar getMenuBarInfo() {
-        return menuBar;
-    }
+// --Commented out by Inspection START (2019-01-25 22:30):
+//    /**
+//     * Gets the menuBar.
+//     * @return menuBar
+//     */
+//    public JMenuBar getMenuBarInfo() {
+//        return menuBar;
+//    }
+// --Commented out by Inspection STOP (2019-01-25 22:30)
 
     /**
      * Gets menuBar.
@@ -100,11 +101,6 @@ public class RadioView extends JFrame {
 
     public MenuBar getMyMenuBar() {
         return menuBar;
-    }
-
-    public void setListeners(ActionListener l){
-        menuBar.addMouseListener((MouseListener) l);
-        //table.addActionListener(l);
     }
 
     public TablePanel getMyTable() {
@@ -139,6 +135,7 @@ public class RadioView extends JFrame {
         repaint();
     }
 
+    @SuppressWarnings("SameParameterValue")
     private ImageIcon scaleV2(BufferedImage bufImg, int w, int h){
         Image render = bufImg.getScaledInstance(w, h, Image.SCALE_SMOOTH);
         return new ImageIcon(render);
