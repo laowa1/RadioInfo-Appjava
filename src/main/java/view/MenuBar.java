@@ -12,8 +12,8 @@ import java.util.List;
 /**
  * For creating a menu.
  * @UserID - tfy17jfo
- * @date - 2018-12-10
- * @version 1.0
+ * @date - 2018-01-25
+ * @version 2.0
  * @author Jakob Fridesjö
  */
 public class MenuBar extends JMenuBar {
@@ -30,8 +30,6 @@ public class MenuBar extends JMenuBar {
         JMenu menu = new JMenu("Meny");
         channelMenu = new JMenu("Kanaler");
         refresh = new JMenuItem("Uppdatera");
-        //menuItem.addMenuKeyListener(new ControllClass(this, 'm'));
-        //refresh.addActionListener(e -> System.out.println(e.getActionCommand()));
         menu.add(channelMenu);
         menu.add(refresh);
         add(menu);

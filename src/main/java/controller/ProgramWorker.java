@@ -12,8 +12,8 @@ import java.util.List;
 /**
  * Parses programs to list.
  * @UserID - tfy17jfo
- * @date - 2018-12-10
- * @version 1.0
+ * @date - 2019-01-25
+ * @version 2.0
  * @author Jakob Fridesjö
  */
 class ProgramWorker extends SwingWorker {
@@ -31,6 +31,13 @@ class ProgramWorker extends SwingWorker {
         this.controller = c;
     }
 
+    /**
+     * Parses programs.
+     * @return if done
+     * @throws ParserConfigurationException config error
+     * @throws SAXException sax error
+     * @throws IOException io error
+     */
     @Override
     protected Object doInBackground() throws
                                                  ParserConfigurationException,
@@ -59,8 +66,11 @@ class ProgramWorker extends SwingWorker {
 //    }
 // --Commented out by Inspection STOP (2019-01-25 22:29)
 
+    /**
+     * Signals controller when done.
+     */
     @Override
     protected void done() {
-        controller.signalDone();
+        controller.signalProgramDone();
     }
 }

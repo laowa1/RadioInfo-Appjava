@@ -39,15 +39,11 @@ public class XMLParser {
     /**
      * Parses url to DOM doc.
      */
-    public void parseToDoc() {
-        try {
-            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-            DocumentBuilder db = dbf.newDocumentBuilder();
-            doc = db.parse(apiURL.openStream());
-            //doc.normalizeDocument();
-        } catch (ParserConfigurationException | SAXException | IOException e) {
-            e.printStackTrace();
-        }
+    public void parseToDoc() throws ParserConfigurationException, IOException, SAXException {
+        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+        DocumentBuilder db = dbf.newDocumentBuilder();
+        doc = db.parse(apiURL.openStream());
+        //doc.normalizeDocument();
     }
 
 // --Commented out by Inspection START (2019-01-25 22:32):
@@ -85,20 +81,16 @@ public class XMLParser {
             for (int i = 0; i < l.getLength(); i++) {
                 Node n = l.item(i);
                 if (n.getNodeType() == Node.ELEMENT_NODE) {
-                    try {
-                        Element e2 = (Element) n;
-                        ProgramInfo pI = new ProgramInfo(e2.getElementsByTagName("title").item(0).getTextContent());
-                        //pI.setId(Integer.parseInt(e.getElementsByTagName("episodeid").item(0).getTextContent()));
-                        pI.setTagLine(e2.getElementsByTagName("description").item(0).getTextContent());
-                        if (e2.getElementsByTagName("imageurl").getLength() > 0) {
-                            pI.setImageURL(new URL(e2.getElementsByTagName("imageurl").item(0).getTextContent()));
-                        }
-                        pI.setStartTimeUTC(e2.getElementsByTagName("starttimeutc").item(0).getTextContent());
-                        pI.setEndTimeUTC(e2.getElementsByTagName("endtimeutc").item(0).getTextContent());
-                        pList.add(pI);
-                    } catch (MalformedURLException ex) {
-                        ex.printStackTrace();
+                    Element e2 = (Element) n;
+                    ProgramInfo pI = new ProgramInfo(e2.getElementsByTagName("title").item(0).getTextContent());
+                    //pI.setId(Integer.parseInt(e.getElementsByTagName("episodeid").item(0).getTextContent()));
+                    pI.setTagLine(e2.getElementsByTagName("description").item(0).getTextContent());
+                    if (e2.getElementsByTagName("imageurl").getLength() > 0) {
+                        pI.setImageURL(new URL(e2.getElementsByTagName("imageurl").item(0).getTextContent()));
                     }
+                    pI.setStartTimeUTC(e2.getElementsByTagName("starttimeutc").item(0).getTextContent());
+                    pI.setEndTimeUTC(e2.getElementsByTagName("endtimeutc").item(0).getTextContent());
+                    pList.add(pI);
                 }
             }
         }
@@ -109,7 +101,7 @@ public class XMLParser {
      * Parses channels from DOM doc.
      * @return list with channels.
      */
-    public List<ChannelInfo> parseChannels() {
+    public List<ChannelInfo> parseChannels() throws MalformedURLException {
         doc.getElementsByTagName("channels").item(0).normalize();
         NodeList l = doc.getElementsByTagName("channel");
         cList = new ArrayList<>();
@@ -117,21 +109,17 @@ public class XMLParser {
         for (int i = 0; i < l.getLength(); i++) {
             Node n = l.item(i);
             if (n.getNodeType() == Node.ELEMENT_NODE) {
-                try {
-                    Element e = (Element) n;
-                    ChannelInfo cI = new ChannelInfo(e.getAttribute("name"));
-                    cI.setId(Integer.parseInt(e.getAttribute("id")));
-                    if(e.getElementsByTagName("tagline").getLength() > 0) {
-                        cI.setTagLine(e.getElementsByTagName("tagline").item(0).getTextContent());
-                    }
-                    cI.setImageURL(new URL(e.getElementsByTagName("image").item(0).getTextContent()));
-                    if(e.getElementsByTagName("scheduleurl").getLength() > 0){
-                        cI.setScheduleURL(new URL(e.getElementsByTagName("scheduleurl").item(0).getTextContent()));
-                        cI.setSiteURL(new URL(e.getElementsByTagName("siteurl").item(0).getTextContent()));
-                        cList.add(cI);
-                    }
-                } catch (MalformedURLException e) {
-                    e.printStackTrace();
+                Element e = (Element) n;
+                ChannelInfo cI = new ChannelInfo(e.getAttribute("name"));
+                cI.setId(Integer.parseInt(e.getAttribute("id")));
+                if(e.getElementsByTagName("tagline").getLength() > 0) {
+                    cI.setTagLine(e.getElementsByTagName("tagline").item(0).getTextContent());
+                }
+                cI.setImageURL(new URL(e.getElementsByTagName("image").item(0).getTextContent()));
+                if(e.getElementsByTagName("scheduleurl").getLength() > 0){
+                    cI.setScheduleURL(new URL(e.getElementsByTagName("scheduleurl").item(0).getTextContent()));
+                    cI.setSiteURL(new URL(e.getElementsByTagName("siteurl").item(0).getTextContent()));
+                    cList.add(cI);
                 }
             }
         }
@@ -141,8 +129,7 @@ public class XMLParser {
     /**
      * Function for updating.
      */
-    public void update() {
-        //TODO Implement in controller.
+    public void update() throws IOException, SAXException, ParserConfigurationException {
         if (apiURL != null) {
             for (ChannelInfo channelInfo : cList) {
                 if (channelInfo.getProgramList() != null) {

@@ -5,8 +5,8 @@ import java.net.URL;
 /**
  * Info about programs.
  * @UserID - tfy17jfo
- * @date - 2018-12-10
- * @version 1.0
+ * @date - 2018-01-25
+ * @version 2.0
  * @author Jakob Fridesjö
  */
 

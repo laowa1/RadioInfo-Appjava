@@ -45,11 +45,10 @@ public class TablePanel extends JPanel {
         table = new JTable(tModel);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         table.setRowHeight(50);
-        table.setRowSelectionAllowed(true);
-        table.setCellSelectionEnabled(false);
-        table.setColumnSelectionAllowed(false);
+       // table.setRowSelectionAllowed(true);
+        //table.setCellSelectionEnabled(false);
+        //table.setColumnSelectionAllowed(false);
         table.setDefaultRenderer(Object.class, new CellRenderer());
-        //table.setDefaultEditor(Object.class, new TableEditor());
         scrollPane = new JScrollPane(table);
         scrollPane.setHorizontalScrollBarPolicy(
                                 ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER);
@@ -61,6 +60,7 @@ public class TablePanel extends JPanel {
     public void setpList(List<ProgramInfo> pList) {
         this.pList = pList;
     }
+
     /**
      * Refreshes the table with new information.
      */
@@ -82,9 +82,9 @@ public class TablePanel extends JPanel {
             for (int i = 0; i < 3; i++) {
                 column = table.getColumnModel().getColumn(i);
                 if (i > 0) {
-                    column.setPreferredWidth(50); //third column is bigger
+                    column.setPreferredWidth(40); //third column is bigger
                 } else {
-                    column.setPreferredWidth(300);
+                    column.setPreferredWidth(400);
                 }
             }
         } finally {
@@ -96,7 +96,7 @@ public class TablePanel extends JPanel {
      * Adds listeners to the table.
      * @param l listener to add.
      */
-    public void addListenersToTableV2(TableSelectionListener l) {
+    public void addListenersToTable(TableSelectionListener l) {
         ListSelectionModel lModel = table.getSelectionModel();
         lModel.addListSelectionListener(l);
     }
@@ -123,35 +123,35 @@ public class TablePanel extends JPanel {
                                                        boolean hasFocus, int row, int column) {
 
 
-            DateTimeFormatter formatter = DateTimeFormatter.ISO_DATE_TIME;
-            DateTimeFormatter formatter2 = DateTimeFormatter.ISO_TIME;
+            DateTimeFormatter isoDateTime = DateTimeFormatter.ISO_DATE_TIME;
+            DateTimeFormatter isoTime = DateTimeFormatter.ISO_TIME;
             JTextField editor = new JTextField();
             LocalDateTime time = LocalDateTime.now();
             Font myFont = new Font(Font.MONOSPACED, Font.BOLD, 14).deriveFont(
                     AffineTransform.getScaleInstance(0.9, 1d));
             editor.setFont(myFont);
             editor.setOpaque(true);
-            //System.out.println(value);
             if (column > 0 && value != null && value.toString().length() > 13) {
-                LocalDateTime timeValue = LocalDateTime.parse(value.toString(), formatter);
-                String timeText = timeValue.format(formatter2);
+                LocalDateTime timeValue = LocalDateTime.parse(value.toString(), isoDateTime);
+                String timeText = timeValue.format(isoTime);
                 editor.setBounds(new Rectangle(table.getWidth()/6, table.getRowHeight()));
                 final String substring = timeText.substring(0, timeText.length() - 3);
                 if (time.isAfter(timeValue)) {
                     editor.setBackground(new Color(210, 120, 105, 200));
-                    table.repaint();
                     editor.setText('(' + substring + ')');
-                }
-                else {
+                } else {
                     editor.setBackground(new Color(180, 210, 100, 200));
-                    table.repaint();
                     editor.setText(substring);
                 }
             } else if (value != null) {
-                if ((row % 2) == 0) {
-                    editor.setBackground(new Color(150, 220, 220, 120));
-                    table.repaint();
-                }
+                //if (isSelected) {
+                //    table.setSelectionBackground(new Color(245,135,75,120));
+                //    table.setSelectionForeground(new Color(245,135,75,120));
+                //} else {
+                    if ((row % 2) != 0) {
+                        editor.setBackground(new Color(150, 220, 220, 90));
+                    }
+                //}
                 editor.setText(value.toString());
             }
             return editor;

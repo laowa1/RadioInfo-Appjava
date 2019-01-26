@@ -14,7 +14,6 @@ import java.util.List;
 @SuppressWarnings("unused")
 public class ChannelInfo {
     private Integer id;
-    //private Image img;
     private final String name;
     private String tagLine;
     private URL imageURL;
@@ -22,60 +21,116 @@ public class ChannelInfo {
     private URL scheduleURL;
     private List<ProgramInfo> pI;
 
-    public ChannelInfo(String name) {
+    /**
+     * Constructs channel.
+     * @param name name of channel.
+     */
+    ChannelInfo(String name) {
         this.name = name;
     }
 
-    public void setProgramList(List<ProgramInfo> l) {
+    /**
+     * Sets the list
+     * @param l list to set
+     */
+    void setProgramList(List<ProgramInfo> l) {
         pI = new ArrayList<>();
         pI = l;
     }
 
+    /**
+     * gets the list
+     * @return list
+     */
     public List<ProgramInfo> getProgramList() {
         return this.pI;
     }
 
+    /**
+     * Gets ID
+     * @return id
+     */
     public Integer getId() {
         return id;
     }
 
+    /**
+     * Gets name
+     * @return name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Gets URL for image
+     * @return image url
+     */
     public URL getImageURL() {
         return imageURL;
     }
 
+    /**
+     * Gets site URL
+     * @return site url
+     */
     public URL getSiteURL() {
         return siteURL;
     }
 
-    public URL getScheduleURL() {
+    /**
+     * Gets schedule url.
+     * @return
+     */
+    URL getScheduleURL() {
         return scheduleURL;
     }
 
-    public void setId(Integer id) {
+    /**
+     * Sets ID
+     * @param id of program
+     */
+    void setId(Integer id) {
         this.id = id;
     }
 
-    public void setTagLine(String tagLine) {
+    /**
+     * Sets description/tagline
+     * @param tagLine to set
+     */
+    void setTagLine(String tagLine) {
         this.tagLine = tagLine;
     }
 
+    /**
+     * Gets tagline
+     * @return tagLine
+     */
     public String getTagLine() {
         return tagLine;
     }
 
-    public void setImageURL(URL imageURL) {
+    /**
+     * Sets image URL
+     * @param imageURL url to image
+     */
+    void setImageURL(URL imageURL) {
         this.imageURL = imageURL;
     }
 
-    public void setSiteURL(URL siteURL) {
+    /**
+     * Sets site URL
+     * @param siteURL url to site.
+     */
+    void setSiteURL(URL siteURL) {
         this.siteURL = siteURL;
     }
 
-    public void setScheduleURL(URL scheduleURL) {
+    /**
+     * Sets URL to schedule.
+     * @param scheduleURL to set
+     */
+    void setScheduleURL(URL scheduleURL) {
         this.scheduleURL = scheduleURL;
     }
 }

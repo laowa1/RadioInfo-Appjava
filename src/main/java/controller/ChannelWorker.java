@@ -2,15 +2,19 @@ package controller;
 
 import model.ChannelInfo;
 import model.XMLParser;
+import org.xml.sax.SAXException;
 
 import javax.swing.*;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
+import java.net.MalformedURLException;
 import java.util.List;
 
 /**
  * Parses channels to list.
  * @UserID - tfy17jfo
- * @date - 2018-12-10
- * @version 1.0
+ * @date - 2019-01-25
+ * @version 2.0
  * @author Jakob Fridesjö
  */
 class ChannelWorker extends SwingWorker<Boolean, ChannelInfo> {
@@ -24,7 +28,7 @@ class ChannelWorker extends SwingWorker<Boolean, ChannelInfo> {
      * @param xml - xml to parse
      * @param crl - controller instance
      */
-    ChannelWorker(XMLParser xml, Controller crl) {
+    ChannelWorker(XMLParser xml, Controller crl) throws IOException, SAXException, ParserConfigurationException {
         xml.parseToDoc();
         this.xml = xml;
         this.crl = crl;
@@ -35,24 +39,10 @@ class ChannelWorker extends SwingWorker<Boolean, ChannelInfo> {
      * @return boolean
      */
     @Override
-    protected Boolean doInBackground() {
+    protected Boolean doInBackground() throws MalformedURLException {
         this.cList = xml.parseChannels();
-        /*for (ChannelInfo cI : cList) {
-            System.out.println(cI.getName());
-            //publish(cI);
-        }*/
         return true;
     }
-
-// --Commented out by Inspection START (2019-01-25 22:33):
-//    /**
-//     * For getting the ChannelInfo list.
-//     * @return List with channels
-//     */
-//    public List<ChannelInfo> getList() {
-//        return this.cList;
-//    }
-// --Commented out by Inspection STOP (2019-01-25 22:33)
 
     /**
      * Sets timer when done.

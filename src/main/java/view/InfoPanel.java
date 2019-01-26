@@ -28,9 +28,9 @@ public class InfoPanel extends JPanel {
         BufferedImage image;
         ImageIcon image2 = null;
         try {
-            String sr = "/home/tfy17jfo/IdeaProjects/RadioInfo-Appjava/src/main/resources/textures/sr.jpg";
-            image = ImageIO.read(new File(sr));
-            image2 = scaleV2(image, 300,300,false);
+            final String sr = "/textures/sr.jpg";
+            image = ImageIO.read(getClass().getResource(sr));
+            image2 = scaleV2(image, 200,200,false);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -44,7 +44,7 @@ public class InfoPanel extends JPanel {
         info.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(info);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setPreferredSize(new Dimension(300, 150));
+        scrollPane.setPreferredSize(new Dimension(200, 150));
         info.setFont(new Font("Sans", Font.PLAIN, 17));
         //setPreferredSize(new Dimension(400,150));
         add(label, BorderLayout.CENTER);
@@ -60,38 +60,29 @@ public class InfoPanel extends JPanel {
         info.setText("\n" + text);
     }
 
-    public void setImage(URL url) {
-        try {
-            BufferedImage image = ImageIO.read(url);
-            if (label.getHeight() > label.getWidth()) {
-                ImageIcon img1 = scaleV1(image, label.getWidth(),label.getWidth(), false);
-                label.setIcon(img1);
-            } else {
-                scaleV1(image, label.getWidth(), label.getWidth(),false);
-                ImageIcon img1 = scaleV1(image, label.getHeight(),label.getHeight(), false);
-                label.setIcon(img1);
-            }
-
-            this.label.setBackground(new Color(image.getRGB(0,0)));
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void setImage(URL url) throws IOException {
+        BufferedImage image = ImageIO.read(url);
+        if (label.getHeight() > label.getWidth()) {
+            ImageIcon img1 = scaleV1(image, label.getWidth(),label.getWidth(), false);
+            label.setIcon(img1);
+        } else {
+            scaleV1(image, label.getWidth(), label.getWidth(),false);
+            ImageIcon img1 = scaleV1(image, label.getHeight(),label.getHeight(), false);
+            label.setIcon(img1);
         }
+        this.label.setBackground(new Color(image.getRGB(0,0)));
     }
 
-    public void setImage(String name) {
-        try {
-            BufferedImage image = ImageIO.read(new File(name));
-            if (label.getHeight() > label.getWidth()) {
-                ImageIcon image2 = scaleV1(image, label.getWidth(), label.getWidth(), false);
-                label.setIcon(image2);
-            } else {
-                ImageIcon image2 = scaleV1(image, label.getHeight(), label.getHeight(), false);
-                label.setIcon(image2);
-            }
-            label.setBackground(new Color(image.getRGB(0, 0)));
-        } catch (IOException e) {
-            e.printStackTrace();
+    public void setImage(String name) throws IOException {
+        BufferedImage image = ImageIO.read(getClass().getResource(name));
+        if (label.getHeight() > label.getWidth()) {
+            ImageIcon image2 = scaleV1(image, label.getWidth(), label.getWidth(), false);
+            label.setIcon(image2);
+        } else {
+            ImageIcon image2 = scaleV1(image, label.getHeight(), label.getHeight(), false);
+            label.setIcon(image2);
         }
+        label.setBackground(new Color(image.getRGB(0, 0)));
     }
 
     @SuppressWarnings("SameParameterValue")

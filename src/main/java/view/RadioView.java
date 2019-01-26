@@ -19,10 +19,11 @@ public class RadioView extends JFrame {
     private static final long serialVersionUID = -471689426345376977L;
     private final MenuBar menuBar;
     private JPanel northPanel;
-    private JPanel centerPanel;
-    private JPanel southPanel;
+    private JPanel tablePanel;
+    private JPanel infoPanel;
     private final JLabel topLabel;
     private final JPanel glassPane;
+
     /**
      * Creates the view.
      * @param title of program
@@ -34,11 +35,12 @@ public class RadioView extends JFrame {
 
         glassPane = (JPanel) this.getGlassPane();
         //Minimum 400
-        int f_HEIGHT = 640;//Minimum 400
-        int f_WIDTH = 500;
+        int f_HEIGHT = 600;//Minimum 400
+        int f_WIDTH = 800;
         glassPane.setSize(f_WIDTH, f_HEIGHT);
         glassPane.setLayout(new BorderLayout());
-        JLabel glassLabel1 = new JLabel(new ImageIcon("/home/tfy17jfo/IdeaProjects/RadioInfo-Appjava/src/main/resources/textures/loading.gif"));
+        String loading = "/textures/loading.gif";
+        JLabel glassLabel1 = new JLabel(new ImageIcon(getClass().getResource(loading)));
         /*JTextField glassText = new JTextField("Loading...");
         glassText.setFont(new Font("Sans", Font.PLAIN, 40));
         glassText.setHorizontalAlignment(JTextField.CENTER);
@@ -62,15 +64,15 @@ public class RadioView extends JFrame {
         northPanel.add(menuBar, BorderLayout.NORTH);
         northPanel.add(topLabel, BorderLayout.CENTER);
         contentPanel.add(northPanel, BorderLayout.NORTH);
-        contentPanel.add(centerPanel, BorderLayout.WEST);
-        contentPanel.add(southPanel, BorderLayout.CENTER);
+        contentPanel.add(tablePanel, BorderLayout.WEST);
+        contentPanel.add(infoPanel, BorderLayout.CENTER);
         contentPanel.setVisible(true);
         this.getContentPane().add(contentPanel);
         pack();
         setVisible(true);
         startLoadingOverlay(false);
-        centerPanel.setVisible(false);
-        southPanel.setVisible(false);
+        tablePanel.setVisible(false);
+        infoPanel.setVisible(false);
     }
 
     /**
@@ -78,21 +80,13 @@ public class RadioView extends JFrame {
      */
     private void createPanels() {
         northPanel = new JPanel(new BorderLayout());
-        centerPanel = new TablePanel();
-        southPanel = new InfoPanel();
-        //centerPanel.setBackground(Color.WHITE);
-        southPanel.setPreferredSize(new Dimension(400,300));
+        tablePanel = new TablePanel();
+        tablePanel.setPreferredSize(new Dimension(600, 600));
+        infoPanel = new InfoPanel();
+        //tablePanel.setBackground(Color.WHITE);
+        infoPanel.setPreferredSize(new Dimension(300,300));
     }
 
-// --Commented out by Inspection START (2019-01-25 22:30):
-//    /**
-//     * Gets the menuBar.
-//     * @return menuBar
-//     */
-//    public JMenuBar getMenuBarInfo() {
-//        return menuBar;
-//    }
-// --Commented out by Inspection STOP (2019-01-25 22:30)
 
     /**
      * Gets menuBar.
@@ -104,11 +98,11 @@ public class RadioView extends JFrame {
     }
 
     public TablePanel getMyTable() {
-        return (TablePanel) centerPanel;
+        return (TablePanel) tablePanel;
     }
 
     public InfoPanel getInfoPanel() {
-        return (InfoPanel) southPanel;
+        return (InfoPanel) infoPanel;
     }
 
     public void setHeader(URL url) {
@@ -143,7 +137,7 @@ public class RadioView extends JFrame {
     }
 
     public void enableContent() {
-        centerPanel.setVisible(true);
-        southPanel.setVisible(true);
+        tablePanel.setVisible(true);
+        infoPanel.setVisible(true);
     }
 }

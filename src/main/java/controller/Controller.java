@@ -3,9 +3,11 @@ package controller;
 import model.ChannelInfo;
 import model.ProgramInfo;
 import model.XMLParser;
+import org.xml.sax.SAXException;
 import view.RadioView;
 
-import java.net.MalformedURLException;
+import javax.xml.parsers.ParserConfigurationException;
+import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Objects;
@@ -15,8 +17,8 @@ import java.util.Timer;
 /**
  * controller class for starting a test instance.
  * @UserID - tfy17jfo
- * @date - 2018-12-10
- * @version 1.0
+ * @date - 2019-01-25
+ * @version 2.0
  * @author Jakob Fridesjö
  */
 public class Controller {
@@ -26,9 +28,14 @@ public class Controller {
     private boolean listen2 = false;
     private String programName = null;
     boolean switching = false;
+    private List<Exception> exceptionList;
+    private boolean done = false;
 
-
-    public synchronized void setList(List<ChannelInfo> cList) {
+    /**
+     * Sets the list for channels.
+     * @param cList channel list.
+     */
+    synchronized void setList(List<ChannelInfo> cList) {
         this.cList = cList;
     }
 
@@ -41,15 +48,20 @@ public class Controller {
         setTimer();
     }
 
-    public synchronized void programWorker() {
+    /**
+     * Creates a new program worker.
+     */
+    synchronized void programWorker() {
+        view.startLoadingOverlay(true);
+        try {
             xml.update();
-            ProgramWorker pWorker = new ProgramWorker(xml, cList, this);
+        } catch (IOException | SAXException | ParserConfigurationException e) {
+            exceptionList.add(e);
+        }
+        ProgramWorker pWorker = new ProgramWorker(xml, cList, this);
             pWorker.execute();
     }
 
-    public synchronized void signalDone() {
-        view.stopLoadingOverlay();
-    }
     /**
      * Function that refreshes worker.
      */
@@ -60,8 +72,8 @@ public class Controller {
             xml = new XMLParser(new URL(url));
             ChannelWorker cWorker = new ChannelWorker(xml, this);
             cWorker.execute();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+        } catch (IOException | SAXException | ParserConfigurationException e) {
+            exceptionList.add(e);
         }
     }
 
@@ -79,13 +91,15 @@ public class Controller {
             }, 0, 240000);
     }
 
+    /**
+     * Adds listeners to the menu.
+     */
     private synchronized void addListenersToMenu() {
         view.getMyMenuBar().addListenersToMenu(e -> {
             if (Objects.equals(e.getActionCommand(), "Uppdatera")) {
                 view.startLoadingOverlay(false);
                 channelWorker();
             } else {
-                //TODO Implement channel loading
                 for (ChannelInfo channelInfo : cList) {
                     if (Objects.equals(channelInfo.getName(), e.getActionCommand())) {
                         switching = true;
@@ -99,6 +113,10 @@ public class Controller {
         });
     }
 
+    /**
+     * Refreshes the table.
+     * @param pList list of programs.
+     */
     private synchronized void refreshTable(List<ProgramInfo> pList) {
         view.getMyTable().resetScrollPosition();
         view.getMyTable().setpList(pList);
@@ -111,18 +129,25 @@ public class Controller {
         view.enableContent();
     }
 
+    /**
+     * Adds listeners to the table
+     */
     private synchronized void addTableListeners() {
-        view.getMyTable().addListenersToTableV2(new TableSelectionListener(view.getMyTable().getTable(), this));
+        view.getMyTable().addListenersToTable(new TableSelectionListener(view.getMyTable().getTable(), this));
     }
 
     synchronized void setProgramInfo(int index) {
         for (int i = 0; i < cList.size(); i++) {
             if (cList.get(i).getName().equals(programName)) {
                 if (index <= cList.size()) {
-                    if (cList.get(i).getProgramList().get(index).getImageURL() != null) {
-                        view.getInfoPanel().setImage(cList.get(i).getProgramList().get(index).getImageURL());
-                    } else {
-                        view.getInfoPanel().setImage("/home/tfy17jfo/IdeaProjects/RadioInfo-Appjava/src/main/resources/textures/sr.jpg");
+                    try {
+                        if (cList.get(i).getProgramList().get(index).getImageURL() != null) {
+                            view.getInfoPanel().setImage(cList.get(i).getProgramList().get(index).getImageURL());
+                        } else {
+                            view.getInfoPanel().setImage("/textures/sr.jpg");
+                        }
+                    } catch (IOException e) {
+                        exceptionList.add(e);
                     }
                     if (cList.get(i).getProgramList().get(index).getTagLine() != null) {
                         view.getInfoPanel().setDescription(cList.get(i).getProgramList().get(index).getTagLine());
@@ -135,9 +160,27 @@ public class Controller {
         }
     }
 
-    synchronized public void signalChannelDone() {
+    /**
+     * Signal that channel parsing has been completed.
+     */
+    synchronized void signalChannelDone() {
         view.getMyMenuBar().clearChannels();
         view.getMyMenuBar().addChannels(cList);
         addListenersToMenu();
+    }
+
+    /**
+     * Disables overlay and loads first channel/program.
+     */
+    synchronized void signalProgramDone() {
+        view.stopLoadingOverlay();
+        if (!done) {
+            if (cList.size() > 0) {
+                programName = cList.get(0).getName();
+                view.setHeader(cList.get(0).getImageURL());
+                refreshTable(cList.get(0).getProgramList());
+            }
+        }
+        done = true;
     }
 }
