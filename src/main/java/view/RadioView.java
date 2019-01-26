@@ -97,14 +97,25 @@ public class RadioView extends JFrame {
         return menuBar;
     }
 
+    /**
+     * Gets the table.
+     */
     public TablePanel getMyTable() {
         return (TablePanel) tablePanel;
     }
 
+    /**
+     * Gets the infoPanel
+     * @return infoPanel
+     */
     public InfoPanel getInfoPanel() {
         return (InfoPanel) infoPanel;
     }
 
+    /**
+     * Sets the header
+     * @param url image to load
+     */
     public void setHeader(URL url) {
         //topLabel.setPreferredSize(new Dimension(50, 300));
         try {
@@ -118,17 +129,31 @@ public class RadioView extends JFrame {
         }
     }
 
+    /**
+     * Starts overlay
+     * @param opaque transparent or not
+     */
     public void startLoadingOverlay(boolean opaque) {
         glassPane.setOpaque(opaque);
         glassPane.setVisible(true);
         repaint();
     }
 
+    /**
+     * Stps overlay
+     */
     public void stopLoadingOverlay() {
         glassPane.setVisible(false);
         repaint();
     }
 
+    /**
+     * Scales the image
+     * @param bufImg Buffered image
+     * @param w width
+     * @param h height
+     * @return Scaled ImageIcon
+     */
     @SuppressWarnings("SameParameterValue")
     private ImageIcon scaleV2(BufferedImage bufImg, int w, int h){
         Image render = bufImg.getScaledInstance(w, h, Image.SCALE_SMOOTH);
@@ -136,6 +161,9 @@ public class RadioView extends JFrame {
 
     }
 
+    /**
+     * Enables content.
+     */
     public void enableContent() {
         tablePanel.setVisible(true);
         infoPanel.setVisible(true);

@@ -21,7 +21,9 @@ public class InfoPanel extends JPanel {
     private final JLabel label;
     private final JTextArea info;
 
-
+    /**
+     * Constructor for InfoPanel
+     */
     public InfoPanel() {
         setLayout(new BorderLayout());
 
@@ -60,6 +62,11 @@ public class InfoPanel extends JPanel {
         info.setText("\n" + text);
     }
 
+    /**
+     * Sets image from url
+     * @param url url to load
+     * @throws IOException if image not loadable
+     */
     public void setImage(URL url) throws IOException {
         BufferedImage image = ImageIO.read(url);
         if (label.getHeight() > label.getWidth()) {
@@ -73,6 +80,11 @@ public class InfoPanel extends JPanel {
         this.label.setBackground(new Color(image.getRGB(0,0)));
     }
 
+    /**
+     * Sets image from path.
+     * @param name path
+     * @throws IOException if image not loadable
+     */
     public void setImage(String name) throws IOException {
         BufferedImage image = ImageIO.read(getClass().getResource(name));
         if (label.getHeight() > label.getWidth()) {
@@ -85,6 +97,14 @@ public class InfoPanel extends JPanel {
         label.setBackground(new Color(image.getRGB(0, 0)));
     }
 
+    /**
+     * Scales images smoothly
+     * @param bufImg Buffered image
+     * @param w width
+     * @param h height
+     * @param fast algorithm
+     * @return Scaled ImageIcon
+     */
     @SuppressWarnings("SameParameterValue")
     private ImageIcon scaleV2(BufferedImage bufImg, int w, int h, boolean fast){
         Image render;
@@ -96,6 +116,14 @@ public class InfoPanel extends JPanel {
         return new ImageIcon(render);
     }
 
+    /**
+     * Scales images sharply
+     * @param img image
+     * @param w width
+     * @param h height
+     * @param fast algorithm
+     * @return Scaled ImageIcon
+     */
     @SuppressWarnings("SameParameterValue")
     private ImageIcon scaleV1(Image img, int w, int h, boolean fast){
         BufferedImage scaledImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);

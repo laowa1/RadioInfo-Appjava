@@ -136,6 +136,10 @@ public class Controller {
         view.getMyTable().addListenersToTable(new TableSelectionListener(view.getMyTable().getTable(), this));
     }
 
+    /**
+     * Sets info about program
+     * @param index list index for program
+     */
     synchronized void setProgramInfo(int index) {
         for (int i = 0; i < cList.size(); i++) {
             if (cList.get(i).getName().equals(programName)) {

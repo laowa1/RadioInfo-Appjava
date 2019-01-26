@@ -78,6 +78,9 @@ public class MenuBar extends JMenuBar {
         refresh.addActionListener(a);
     }
 
+    /**
+     * Clears the menu.
+     */
     public void clearChannels() {
         this.channelMenu.removeAll();
     }

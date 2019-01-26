@@ -109,6 +109,9 @@ public class TablePanel extends JPanel {
         return table;
     }
 
+    /**
+     * Resets the scroll position.
+     */
     public void resetScrollPosition() {
         scrollPosition = 0;
     }

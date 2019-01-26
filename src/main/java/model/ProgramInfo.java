@@ -9,65 +9,89 @@ import java.net.URL;
  * @version 2.0
  * @author Jakob Fridesjö
  */
-
 public class ProgramInfo {
 
-    //private Integer id;
-    //private Image img;
     private String startTimeUTC;
     private String endTimeUTC;
     private final String name;
     private String description;
     private URL imageURL;
 
-
-    public ProgramInfo(String name) {
+    /**
+     * Constructor for ProgramInfo
+     * @param name name of program
+     */
+    ProgramInfo(String name) {
         this.name = name;
     }
 
-// --Commented out by Inspection START (2019-01-25 22:29):
-//    public Integer getId() {
-//        return id;
-//    }
-// --Commented out by Inspection STOP (2019-01-25 22:29)
-
+    /**
+     * Gets name of program
+     * @return name
+     */
     public String getName() {
         return name;
     }
 
+    /**
+     * Gets URL for image
+     * @return url
+     */
     public URL getImageURL() {
         return imageURL;
     }
 
-// --Commented out by Inspection START (2019-01-25 22:29):
-//    public void setId(Integer id) {
-//        this.id = id;
-//    }
-// --Commented out by Inspection STOP (2019-01-25 22:29)
-
-    public void setTagLine(String tagLine) {
+    /**
+     * Sets tagLine
+     * @param tagLine description for program
+     */
+    void setTagLine(String tagLine) {
         this.description = tagLine;
     }
 
+    /**
+     * Gets tagLine
+     * @return tagLine
+     */
     public String getTagLine() {
         return description;
     }
 
-    public void setImageURL(URL imageURL) { this.imageURL = imageURL; }
+    /**
+     * Sets URL for image
+     * @param imageURL url to set
+     */
+    void setImageURL(URL imageURL) { this.imageURL = imageURL; }
 
+    /**
+     * Gets start time in utc.
+     * @ time
+     */
     public String getStartTimeUTC() {
         return startTimeUTC;
     }
 
-    public void setStartTimeUTC(String startTimeUTC) {
+    /**
+     * Sets start time in utc.
+     * @param startTimeUTC time
+     */
+    void setStartTimeUTC(String startTimeUTC) {
         this.startTimeUTC = startTimeUTC;
     }
 
+    /**
+     * Gets end time in utc
+     * @return time
+     */
     public String getEndTimeUTC() {
         return endTimeUTC;
     }
 
-    public void setEndTimeUTC(String endTimeUTC) {
+    /**
+     * Sets end time in utc
+     * @param endTimeUTC time
+     */
+    void setEndTimeUTC(String endTimeUTC) {
         this.endTimeUTC = endTimeUTC;
     }
 }
