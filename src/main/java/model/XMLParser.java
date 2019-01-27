@@ -6,13 +6,20 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
+import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
+import java.awt.*;
+import java.awt.geom.AffineTransform;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -27,6 +34,7 @@ public class XMLParser {
     private List<ChannelInfo> cList;
     Document doc = null;
     private final URL apiURL;
+    private SimpleDateFormat dateTime;
 
     /**
      * Constructs parser.
@@ -34,6 +42,7 @@ public class XMLParser {
      */
     public XMLParser(URL url) {
         apiURL = url;
+        dateTime = new SimpleDateFormat("yyyy-MM-dd");
     }
 
     /**
@@ -46,55 +55,48 @@ public class XMLParser {
         //doc.normalizeDocument();
     }
 
-// --Commented out by Inspection START (2019-01-25 22:32):
-//    /**
-//     * Dummy for debugging.
-//     */
-//    public void print() {
-//        for (int i = 0; i < doc.getElementsByTagName("channels").getLength(); i++) {
-//            System.out.println(doc.getChildNodes().item(i).getTextContent());
-//        }
-//    }
-// --Commented out by Inspection STOP (2019-01-25 22:32)
-
     /**
      * Parses programs to list.
-     * @param cI channel to parse from.
+     * @param cList List to parse programs from.
      * @throws IOException IO failure
      * @throws ParserConfigurationException Parser fault in config
      * @throws SAXException Exception in parsing
      */
-    public void parseProgram(ChannelInfo cI) throws IOException, ParserConfigurationException, SAXException {
+    public void parseProgram(List<ChannelInfo> cList) throws IOException, ParserConfigurationException, SAXException {
         DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
         DocumentBuilder db = dbf.newDocumentBuilder();
         //URL tempUrl = new URL()
         //System.out.println(cI.getScheduleURL().toString());
-        Document tempDoc = db.parse(cI.getScheduleURL().openStream());
-        NodeList lTemp = tempDoc.getElementsByTagName("pagination");
-        Element e = (Element) lTemp.item(0);
-        int pages = Integer.parseInt(e.getElementsByTagName("totalpages").item(0).getTextContent());
-        List<ProgramInfo> pList = new ArrayList<>();
-        for (int j = 1; j < pages; j++) {
-            URL tempURL = new URL(cI.getScheduleURL() + "&page=" + j);
-            tempDoc = db.parse(tempURL.openStream());
-            NodeList l = tempDoc.getElementsByTagName("scheduledepisode");
-            for (int i = 0; i < l.getLength(); i++) {
-                Node n = l.item(i);
-                if (n.getNodeType() == Node.ELEMENT_NODE) {
-                    Element e2 = (Element) n;
-                    ProgramInfo pI = new ProgramInfo(e2.getElementsByTagName("title").item(0).getTextContent());
-                    //pI.setId(Integer.parseInt(e.getElementsByTagName("episodeid").item(0).getTextContent()));
-                    pI.setTagLine(e2.getElementsByTagName("description").item(0).getTextContent());
-                    if (e2.getElementsByTagName("imageurl").getLength() > 0) {
-                        pI.setImageURL(new URL(e2.getElementsByTagName("imageurl").item(0).getTextContent()));
+        for (ChannelInfo cI : cList) {
+            Document tempDoc = db.parse((cI.getScheduleURL().openStream()));
+            NodeList lTemp = tempDoc.getElementsByTagName("pagination");
+            Element e = (Element) lTemp.item(0);
+            int pages = Integer.parseInt(e.getElementsByTagName("totalpages").item(0).getTextContent());
+            List<ProgramInfo> pList = new ArrayList<>();
+            for (int j = 1; j <= pages; j++) {
+                URL tempURL = new URL(cI.getScheduleURL() + "&page=" + j);
+                tempDoc = db.parse(tempURL.openStream());
+                NodeList l = tempDoc.getElementsByTagName("scheduledepisode");
+                for (int k = 0; k < l.getLength(); k++) {
+                    Node n = l.item(k);
+                    if (n.getNodeType() == Node.ELEMENT_NODE) {
+                        Element e2 = (Element) n;
+                        ProgramInfo pI = new ProgramInfo(e2.getElementsByTagName("title").item(0).getTextContent());
+                        //pI.setId(Integer.parseInt(e.getElementsByTagName("episodeid").item(0).getTextContent()));
+                        pI.setTagLine(e2.getElementsByTagName("description").item(0).getTextContent());
+                        if (e2.getElementsByTagName("imageurl").getLength() > 0) {
+                            pI.setImageURL(new URL(e2.getElementsByTagName("imageurl").item(0).getTextContent()));
+                        }
+                        pI.setStartTimeUTC(e2.getElementsByTagName("starttimeutc").item(0).getTextContent());
+                        pI.setEndTimeUTC(e2.getElementsByTagName("endtimeutc").item(0).getTextContent());
+                        //if (checkTime(pI)) {
+                            pList.add(pI);
+                        //}
                     }
-                    pI.setStartTimeUTC(e2.getElementsByTagName("starttimeutc").item(0).getTextContent());
-                    pI.setEndTimeUTC(e2.getElementsByTagName("endtimeutc").item(0).getTextContent());
-                    pList.add(pI);
                 }
             }
+            cI.setProgramList(pList);
         }
-        cI.setProgramList(pList);
     }
 
     /**
@@ -105,6 +107,8 @@ public class XMLParser {
         doc.getElementsByTagName("channels").item(0).normalize();
         NodeList l = doc.getElementsByTagName("channel");
         cList = new ArrayList<>();
+        LocalDateTime time = LocalDateTime.now();
+        DateTimeFormatter format = DateTimeFormatter.ISO_LOCAL_DATE;
         //System.out.println(l.getLength()); //Debug output
         for (int i = 0; i < l.getLength(); i++) {
             Node n = l.item(i);
@@ -117,13 +121,31 @@ public class XMLParser {
                 }
                 cI.setImageURL(new URL(e.getElementsByTagName("image").item(0).getTextContent()));
                 if(e.getElementsByTagName("scheduleurl").getLength() > 0){
-                    cI.setScheduleURL(new URL(e.getElementsByTagName("scheduleurl").item(0).getTextContent()));
+                    cI.setScheduleURL(new URL(e.getElementsByTagName("scheduleurl").item(0).getTextContent() + "&date=" + time.format(format)));
                     cI.setSiteURL(new URL(e.getElementsByTagName("siteurl").item(0).getTextContent()));
                     cList.add(cI);
                 }
             }
         }
+        System.out.println(time);
         return cList;
+    }
+
+    private boolean checkTime(ProgramInfo pI) {
+        boolean inRange = false;
+        boolean isInTime = false;
+        DateTimeFormatter isoDateTime = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+        JTextField editor = new JTextField();
+        LocalDateTime time = LocalDateTime.now();
+        /*
+        if (column > 0 && value != null && value.toString().length() > 13) {
+            LocalDateTime timeValue = LocalDateTime.parse(value.toString(), isoDateTime);
+            String timeText = timeValue.format(isoTime);
+            if (time.isAfter(timeValue)) {
+        if(pI.getStartTimeUTC() && pI.getEndTimeUTC()){
+            isInTime = true;
+        }*/
+        return inRange;
     }
 
     /**

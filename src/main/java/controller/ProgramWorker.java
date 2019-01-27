@@ -42,9 +42,7 @@ class ProgramWorker extends SwingWorker {
     protected Object doInBackground() throws
                                                  ParserConfigurationException,
                                                  SAXException, IOException {
-        for (ChannelInfo cI : this.cList) {
-            xml.parseProgram(cI);
-        }
+        xml.parseProgram(cList);
         return true;
     }
 

@@ -66,7 +66,7 @@ public class TablePanel extends JPanel {
      */
     public void refreshMyTable() {
         table.removeAll();
-        scrollPosition = scrollPane.getVerticalScrollBar().getValue();
+        //scrollPosition = scrollPane.getVerticalScrollBar().getValue();
         try {
             tModel.setRowCount(0);
             for (ProgramInfo programInfo : pList) {
@@ -88,7 +88,7 @@ public class TablePanel extends JPanel {
                 }
             }
         } finally {
-            scrollPane.getVerticalScrollBar().setValue(scrollPosition);
+         //   scrollPane.getVerticalScrollBar().setValue(scrollPosition);
         }
     }
 
