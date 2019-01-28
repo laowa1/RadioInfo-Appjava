@@ -6,8 +6,8 @@
         <sourceOutputDir name="target/generated-sources/annotations" />
         <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
         <outputRelativeToContentRoot value="true" />
-        <module name="RadioInfo-Appjava" />
         <module name="RadioInfo" />
+        <module name="RadioInfo-Appjava" />
       </profile>
     </annotationProcessing>
   </component>
