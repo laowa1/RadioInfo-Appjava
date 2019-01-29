@@ -63,41 +63,47 @@ public class XMLParser {
      * @throws SAXException Exception in parsing
      */
     public void parseProgram(List<ChannelInfo> cList) throws IOException, ParserConfigurationException, SAXException {
-        DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
-        DocumentBuilder db = dbf.newDocumentBuilder();
+
         //URL tempUrl = new URL()
         //System.out.println(cI.getScheduleURL().toString());
-        for (ChannelInfo cI : cList) {
-            Document tempDoc = db.parse((cI.getScheduleURL().openStream()));
-            NodeList lTemp = tempDoc.getElementsByTagName("pagination");
-            Element e = (Element) lTemp.item(0);
-            int pages = Integer.parseInt(e.getElementsByTagName("totalpages").item(0).getTextContent());
+        LocalDateTime localDateTime = LocalDateTime.now();
+        DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
+            for (ChannelInfo cI : cList) {
+                List<ProgramInfo> pList = new ArrayList<>();
+                URL url1 = new URL(cI.getScheduleURL().toString() + "&pagination=false" + "&date=" + localDateTime.minusHours(48).format(format));
+                pList.addAll(returnPrograms(url1));
+                URL url2 = new URL(cI.getScheduleURL().toString() + "&pagination=false" + "&date=" + localDateTime.plusHours(24).format(format));pList.addAll(returnPrograms(url2));
+                pList.addAll(returnPrograms(url2));
+            }
+    }
+
+        public List<ProgramInfo> returnPrograms(URL url) throws ParserConfigurationException, IOException, SAXException {
+
+            DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
+            DocumentBuilder db = dbf.newDocumentBuilder();
             List<ProgramInfo> pList = new ArrayList<>();
-            for (int j = 1; j <= pages; j++) {
-                URL tempURL = new URL(cI.getScheduleURL() + "&page=" + j);
-                tempDoc = db.parse(tempURL.openStream());
-                NodeList l = tempDoc.getElementsByTagName("scheduledepisode");
-                for (int k = 0; k < l.getLength(); k++) {
-                    Node n = l.item(k);
-                    if (n.getNodeType() == Node.ELEMENT_NODE) {
-                        Element e2 = (Element) n;
-                        ProgramInfo pI = new ProgramInfo(e2.getElementsByTagName("title").item(0).getTextContent());
-                        //pI.setId(Integer.parseInt(e.getElementsByTagName("episodeid").item(0).getTextContent()));
-                        pI.setTagLine(e2.getElementsByTagName("description").item(0).getTextContent());
-                        if (e2.getElementsByTagName("imageurl").getLength() > 0) {
-                            pI.setImageURL(new URL(e2.getElementsByTagName("imageurl").item(0).getTextContent()));
-                        }
-                        pI.setStartTimeUTC(e2.getElementsByTagName("starttimeutc").item(0).getTextContent());
-                        pI.setEndTimeUTC(e2.getElementsByTagName("endtimeutc").item(0).getTextContent());
-                        //if (checkTime(pI)) {
-                            pList.add(pI);
-                        //}
+            Document tempDoc = db.parse(url.openStream());
+            NodeList l = tempDoc.getElementsByTagName("scheduledepisode");
+            for (int k = 0; k < l.getLength(); k++) {
+                Node n = l.item(k);
+                if (n.getNodeType() == Node.ELEMENT_NODE) {
+                    Element e2 = (Element) n;
+                    ProgramInfo pI = new ProgramInfo(e2.getElementsByTagName("title").item(0).getTextContent());
+                    //pI.setId(Integer.parseInt(e.getElementsByTagName("episodeid").item(0).getTextContent()));
+                    pI.setTagLine(e2.getElementsByTagName("description").item(0).getTextContent());
+                    if (e2.getElementsByTagName("imageurl").getLength() > 0) {
+                        pI.setImageURL(new URL(e2.getElementsByTagName("imageurl").item(0).getTextContent()));
                     }
+                    pI.setStartTimeUTC(e2.getElementsByTagName("starttimeutc").item(0).getTextContent());
+                    pI.setEndTimeUTC(e2.getElementsByTagName("endtimeutc").item(0).getTextContent());
+                    //if (checkTime(pI)) {
+                    System.out.println(url);
+                    pList.add(pI);
+                    //}
                 }
             }
-            cI.setProgramList(pList);
+            return pList;
         }
-    }
 
     /**
      * Parses channels from DOM doc.
@@ -121,7 +127,7 @@ public class XMLParser {
                 }
                 cI.setImageURL(new URL(e.getElementsByTagName("image").item(0).getTextContent()));
                 if(e.getElementsByTagName("scheduleurl").getLength() > 0){
-                    cI.setScheduleURL(new URL(e.getElementsByTagName("scheduleurl").item(0).getTextContent() + "&date=" + time.format(format)));
+                    cI.setScheduleURL(new URL(e.getElementsByTagName("scheduleurl").item(0).getTextContent()));
                     cI.setSiteURL(new URL(e.getElementsByTagName("siteurl").item(0).getTextContent()));
                     cList.add(cI);
                 }
