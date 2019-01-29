@@ -67,6 +67,7 @@ public class TablePanel extends JPanel {
     public void refreshMyTable() {
         table.removeAll();
         //scrollPosition = scrollPane.getVerticalScrollBar().getValue();
+        //LocalDateTime time = LocalDateTime.now();
         try {
             tModel.setRowCount(0);
             for (ProgramInfo programInfo : pList) {

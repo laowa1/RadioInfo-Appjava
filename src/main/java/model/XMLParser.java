@@ -17,6 +17,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Date;
@@ -97,7 +98,9 @@ public class XMLParser {
                     }
                     pI.setStartTimeUTC(e2.getElementsByTagName("starttimeutc").item(0).getTextContent());
                     pI.setEndTimeUTC(e2.getElementsByTagName("endtimeutc").item(0).getTextContent());
-                    pList.add(pI);
+                    if (checkTime(pI)) {
+                        pList.add(pI);
+                    }
                 }
             }
             return pList;
@@ -111,9 +114,6 @@ public class XMLParser {
         doc.getElementsByTagName("channels").item(0).normalize();
         NodeList l = doc.getElementsByTagName("channel");
         cList = new ArrayList<>();
-        LocalDateTime time = LocalDateTime.now();
-        DateTimeFormatter format = DateTimeFormatter.ISO_LOCAL_DATE;
-        //System.out.println(l.getLength()); //Debug output
         for (int i = 0; i < l.getLength(); i++) {
             Node n = l.item(i);
             if (n.getNodeType() == Node.ELEMENT_NODE) {
@@ -131,25 +131,17 @@ public class XMLParser {
                 }
             }
         }
-        System.out.println(time);
         return cList;
     }
 
+    /**
+     * Checks if time is in range.
+     * @return boolean
+     */
     private boolean checkTime(ProgramInfo pI) {
-        boolean inRange = false;
-        boolean isInTime = false;
-        DateTimeFormatter isoDateTime = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-        JTextField editor = new JTextField();
         LocalDateTime time = LocalDateTime.now();
-        /*
-        if (column > 0 && value != null && value.toString().length() > 13) {
-            LocalDateTime timeValue = LocalDateTime.parse(value.toString(), isoDateTime);
-            String timeText = timeValue.format(isoTime);
-            if (time.isAfter(timeValue)) {
-        if(pI.getStartTimeUTC() && pI.getEndTimeUTC()){
-            isInTime = true;
-        }*/
-        return inRange;
+        LocalDateTime time2 = LocalDateTime.parse(pI.getStartTimeUTC().replaceAll("Z$", ""));
+        return time.minusHours(12).isBefore(time2) && time.plusHours(12).isAfter(time2);
     }
 
     /**
