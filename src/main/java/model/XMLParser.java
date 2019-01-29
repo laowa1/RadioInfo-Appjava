@@ -70,10 +70,11 @@ public class XMLParser {
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             for (ChannelInfo cI : cList) {
                 List<ProgramInfo> pList = new ArrayList<>();
-                URL url1 = new URL(cI.getScheduleURL().toString() + "&pagination=false" + "&date=" + localDateTime.minusHours(48).format(format));
+                URL url1 = new URL(cI.getScheduleURL().toString() + "&pagination=false" + "&date=" + localDateTime.minusHours(12).format(format));
                 pList.addAll(returnPrograms(url1));
-                URL url2 = new URL(cI.getScheduleURL().toString() + "&pagination=false" + "&date=" + localDateTime.plusHours(24).format(format));pList.addAll(returnPrograms(url2));
+                URL url2 = new URL(cI.getScheduleURL().toString() + "&pagination=false" + "&date=" + localDateTime.plusHours(12).format(format));
                 pList.addAll(returnPrograms(url2));
+                cI.setProgramList(pList);
             }
     }
 
@@ -96,10 +97,7 @@ public class XMLParser {
                     }
                     pI.setStartTimeUTC(e2.getElementsByTagName("starttimeutc").item(0).getTextContent());
                     pI.setEndTimeUTC(e2.getElementsByTagName("endtimeutc").item(0).getTextContent());
-                    //if (checkTime(pI)) {
-                    System.out.println(url);
                     pList.add(pI);
-                    //}
                 }
             }
             return pList;

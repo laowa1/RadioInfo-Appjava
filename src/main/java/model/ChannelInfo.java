@@ -34,7 +34,6 @@ public class ChannelInfo {
      * @param l list to set
      */
     void setProgramList(List<ProgramInfo> l) {
-        pI = new ArrayList<>();
         pI = l;
     }
 
