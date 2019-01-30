@@ -23,7 +23,8 @@ public class RadioView extends JFrame {
     private JPanel infoPanel;
     private final JLabel topLabel;
     private final JPanel glassPane;
-
+    private JTextField infoField;
+    private JLabel glassLabel1;
     /**
      * Creates the view.
      * @param title of program
@@ -40,15 +41,14 @@ public class RadioView extends JFrame {
         glassPane.setSize(f_WIDTH, f_HEIGHT);
         glassPane.setLayout(new BorderLayout());
         String loading = "/textures/loading.gif";
-        JLabel glassLabel1 = new JLabel(new ImageIcon(getClass().getResource(loading)));
-        /*JTextField glassText = new JTextField("Loading...");
-        glassText.setFont(new Font("Sans", Font.PLAIN, 40));
-        glassText.setHorizontalAlignment(JTextField.CENTER);
-        glassText.setEditable(false);
-        glassText.setOpaque(false);
-        glassText.setBorder(javax.swing.BorderFactory.createEmptyBorder());
-        glassPane.add(glassText, BorderLayout.SOUTH);
-        */
+        glassLabel1 = new JLabel(new ImageIcon(getClass().getResource(loading)));
+        infoField = new JTextField();
+        infoField.setFont(new Font("Sans", Font.PLAIN, 40));
+        infoField.setHorizontalAlignment(JTextField.CENTER);
+        infoField.setEditable(false);
+        infoField.setOpaque(false);
+        infoField.setBorder(javax.swing.BorderFactory.createEmptyBorder());
+        glassPane.add(infoField, BorderLayout.SOUTH);
         glassPane.add(glassLabel1, BorderLayout.CENTER);
         glassPane.setVisible(true);
         glassPane.setOpaque(true);
@@ -167,5 +167,27 @@ public class RadioView extends JFrame {
     public void enableContent() {
         tablePanel.setVisible(true);
         infoPanel.setVisible(true);
+    }
+
+    /**
+     * Set info text, for errors.
+     */
+    public void setText(String s) {
+        //glassLabel1.setVisible(false);
+        infoField.setText(s + "\n");
+        infoField.setVisible(true);
+        glassPane.setVisible(true);
+        repaint();
+    }
+
+    /**
+     * Clears text, for errors.
+     */
+    public void clearText() {
+        infoField.setText("");
+        infoField.setVisible(false);
+        glassLabel1.setVisible(true);
+        glassPane.setVisible(false);
+        repaint();
     }
 }

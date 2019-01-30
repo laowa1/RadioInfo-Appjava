@@ -28,14 +28,14 @@ public class Controller {
     private boolean listen2 = false;
     private String programName = null;
     boolean switching = false;
-    private List<Exception> exceptionList;
     private boolean done = false;
+    List<String> exceptionList;
 
     /**
      * Sets the list for channels.
      * @param cList channel list.
      */
-    synchronized void setList(List<ChannelInfo> cList) {
+     void setList(List<ChannelInfo> cList) {
         this.cList = cList;
     }
 
@@ -51,21 +51,21 @@ public class Controller {
     /**
      * Creates a new program worker.
      */
-    synchronized void programWorker() {
+     void programWorker() {
         view.startLoadingOverlay(true);
         try {
             xml.update();
         } catch (IOException | SAXException | ParserConfigurationException e) {
-            exceptionList.add(e);
+            showErrors("Error: " + e.toString());
         }
         ProgramWorker pWorker = new ProgramWorker(xml, cList, this);
-            pWorker.execute();
+        pWorker.execute();
     }
 
     /**
      * Function that refreshes worker.
      */
-    private synchronized void channelWorker() {
+    private  void channelWorker() {
         try {
             view.startLoadingOverlay(true);
             String url = "http://api.sr.se/api/v2/channels?pagination=false";
@@ -73,31 +73,49 @@ public class Controller {
             ChannelWorker cWorker = new ChannelWorker(xml, this);
             cWorker.execute();
         } catch (IOException | SAXException | ParserConfigurationException e) {
-            exceptionList.add(e);
+            showErrors("Error: " + e.toString());
         }
+    }
+
+    private  void showErrors(String s) {
+        Timer timer = new Timer();
+        timer.schedule(new TimerTask() {
+            @Override
+            public void run() {
+                view.setText(s);
+                try {
+                    Thread.sleep(10000);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                view.clearText();
+                timer.cancel();
+            }
+        },100,100);
     }
 
     /**
      * Refreshes worker hourly.
      */
-    private synchronized void setTimer() {
-            Timer timer = new Timer();
-            timer.scheduleAtFixedRate(new TimerTask() {
-                @Override
-                public void run() {
-                    view.startLoadingOverlay(true);
-                    channelWorker();
-                }
-            }, 0, 240000);
+    private  void setTimer() {
+        Timer timer = new Timer();
+        timer.scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                view.startLoadingOverlay(true);
+                channelWorker();
+            }
+        }, 0, 240000);
     }
 
     /**
      * Adds listeners to the menu.
      */
-    private synchronized void addListenersToMenu() {
+    private  void addListenersToMenu() {
         view.getMyMenuBar().addListenersToMenu(e -> {
             if (Objects.equals(e.getActionCommand(), "Uppdatera")) {
                 view.startLoadingOverlay(false);
+                showErrors("Error: " + new SAXException().toString());
                 channelWorker();
             } else {
                 for (ChannelInfo channelInfo : cList) {
@@ -117,7 +135,7 @@ public class Controller {
      * Refreshes the table.
      * @param pList list of programs.
      */
-    private synchronized void refreshTable(List<ProgramInfo> pList) {
+    private  void refreshTable(List<ProgramInfo> pList) {
         view.getMyTable().resetScrollPosition();
         view.getMyTable().setpList(pList);
         view.getMyTable().refreshMyTable();
@@ -132,7 +150,7 @@ public class Controller {
     /**
      * Adds listeners to the table
      */
-    private synchronized void addTableListeners() {
+    private  void addTableListeners() {
         view.getMyTable().addListenersToTable(new TableSelectionListener(view.getMyTable().getTable(), this));
     }
 
@@ -140,7 +158,7 @@ public class Controller {
      * Sets info about program
      * @param index list index for program
      */
-    synchronized void setProgramInfo(int index) {
+     void setProgramInfo(int index) {
         for (int i = 0; i < cList.size(); i++) {
             if (cList.get(i).getName().equals(programName)) {
                 if (index <= cList.size()) {
@@ -151,7 +169,7 @@ public class Controller {
                             view.getInfoPanel().setImage("/textures/sr.jpg");
                         }
                     } catch (IOException e) {
-                        exceptionList.add(e);
+                        showErrors("Error: " + e.toString());
                     }
                     if (cList.get(i).getProgramList().get(index).getTagLine() != null) {
                         view.getInfoPanel().setDescription(cList.get(i).getProgramList().get(index).getTagLine());
@@ -167,7 +185,7 @@ public class Controller {
     /**
      * Signal that channel parsing has been completed.
      */
-    synchronized void signalChannelDone() {
+     void signalChannelDone() {
         view.getMyMenuBar().clearChannels();
         view.getMyMenuBar().addChannels(cList);
         addListenersToMenu();
@@ -176,7 +194,7 @@ public class Controller {
     /**
      * Disables overlay and loads first channel/program.
      */
-    synchronized void signalProgramDone() {
+     void signalProgramDone() {
         view.stopLoadingOverlay();
         if (!done) {
             if (cList.size() > 0) {

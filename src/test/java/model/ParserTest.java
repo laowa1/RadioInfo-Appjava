@@ -36,24 +36,14 @@ public class ParserTest {
         assertNotNull(parser.doc);
     }
 
-    @Test
-    public void getElement() {
-    }
 
     @Test
-    public void parsePrograms() {
-
-    }
-
-    @Test
-    public void parseChannels() throws MalformedURLException {
+    public void parseChannelsAndPrograms() throws IOException, ParserConfigurationException, SAXException {
         List<ChannelInfo> cList = parser.parseChannels();
         for (ChannelInfo channelInfo : cList) {
             System.out.println(channelInfo.getName());
         }
-    }
-
-    @Test
-    public void update() {
+        parser.parseProgram(cList);
+        assertNotNull(cList.get(0).getName() != null);
     }
 }
