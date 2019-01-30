@@ -70,9 +70,8 @@ public class XMLParser {
         LocalDateTime localDateTime = LocalDateTime.now();
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             for (ChannelInfo cI : cList) {
-                List<ProgramInfo> pList = new ArrayList<>();
                 URL url1 = new URL(cI.getScheduleURL().toString() + "&pagination=false" + "&date=" + localDateTime.minusHours(12).format(format));
-                pList.addAll(returnPrograms(url1));
+                List<ProgramInfo> pList = new ArrayList<>(returnPrograms(url1));
                 URL url2 = new URL(cI.getScheduleURL().toString() + "&pagination=false" + "&date=" + localDateTime.plusHours(12).format(format));
                 pList.addAll(returnPrograms(url2));
                 cI.setProgramList(pList);
@@ -92,7 +91,9 @@ public class XMLParser {
                     Element e2 = (Element) n;
                     ProgramInfo pI = new ProgramInfo(e2.getElementsByTagName("title").item(0).getTextContent());
                     //pI.setId(Integer.parseInt(e.getElementsByTagName("episodeid").item(0).getTextContent()));
-                    pI.setTagLine(e2.getElementsByTagName("description").item(0).getTextContent());
+                    if (e2.getElementsByTagName("description").getLength() > 0) {
+                        pI.setTagLine(e2.getElementsByTagName("description").item(0).getTextContent());
+                    }
                     if (e2.getElementsByTagName("imageurl").getLength() > 0) {
                         pI.setImageURL(new URL(e2.getElementsByTagName("imageurl").item(0).getTextContent()));
                     }

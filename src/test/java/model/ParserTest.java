@@ -40,10 +40,7 @@ public class ParserTest {
     @Test
     public void parseChannelsAndPrograms() throws IOException, ParserConfigurationException, SAXException {
         List<ChannelInfo> cList = parser.parseChannels();
-        for (ChannelInfo channelInfo : cList) {
-            System.out.println(channelInfo.getName());
-        }
         parser.parseProgram(cList);
-        assertNotNull(cList.get(0).getName() != null);
+        assertNotNull(cList.get(0).getName());
     }
 }
