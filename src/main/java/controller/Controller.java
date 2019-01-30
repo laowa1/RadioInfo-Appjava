@@ -29,7 +29,6 @@ public class Controller {
     private String programName = null;
     boolean switching = false;
     private boolean done = false;
-    List<String> exceptionList;
 
     /**
      * Sets the list for channels.
@@ -77,6 +76,10 @@ public class Controller {
         }
     }
 
+    /**
+     * Shows error in view.
+     * @param s string
+     */
     private  void showErrors(String s) {
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
