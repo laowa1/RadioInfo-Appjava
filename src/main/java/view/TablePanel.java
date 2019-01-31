@@ -75,6 +75,7 @@ public class TablePanel extends JPanel {
                         programInfo.getStartTimeUTC(),
                         programInfo.getEndTimeUTC()});
                 //parseTimes(pList.get(i).getStartTimeUTC(),
+
                 //         pList.get(i).getEndTimeUTC())});
             }
             table.setGridColor(new Color(150, 220, 220, 120));

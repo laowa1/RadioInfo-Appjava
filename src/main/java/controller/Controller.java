@@ -64,7 +64,7 @@ public class Controller {
     /**
      * Function that refreshes worker.
      */
-    private  void channelWorker() {
+    private void channelWorker() {
         try {
             view.startLoadingOverlay(true);
             String url = "http://api.sr.se/api/v2/channels?pagination=false";

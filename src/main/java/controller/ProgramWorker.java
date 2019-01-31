@@ -25,7 +25,7 @@ class ProgramWorker extends SwingWorker {
     /**
      * Constructs an worker for programs.
      */
-    public ProgramWorker(XMLParser xml, List<ChannelInfo> cList, Controller c) {
+    ProgramWorker(XMLParser xml, List<ChannelInfo> cList, Controller c) {
         this.xml = xml;
         this.cList = cList;
         this.controller = c;

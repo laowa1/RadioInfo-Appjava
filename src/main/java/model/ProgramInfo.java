@@ -73,10 +73,10 @@ public class ProgramInfo {
 
     /**
      * Sets start time in utc.
-     * @param startTimeUTC time
+     * @param time time
      */
-    void setStartTimeUTC(String startTimeUTC) {
-        this.startTimeUTC = startTimeUTC;
+    void setStartTimeUTC(String time) {
+        this.startTimeUTC = time;
     }
 
     /**

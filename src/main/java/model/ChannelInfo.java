@@ -79,7 +79,7 @@ public class ChannelInfo {
 
     /**
      * Gets schedule url.
-     * @return
+     * @return schedule url
      */
     URL getScheduleURL() {
         return scheduleURL;

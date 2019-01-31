@@ -24,7 +24,7 @@ public class InfoPanel extends JPanel {
     /**
      * Constructor for InfoPanel
      */
-    public InfoPanel() {
+    InfoPanel() {
         setLayout(new BorderLayout());
 
         BufferedImage image;

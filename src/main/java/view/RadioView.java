@@ -184,7 +184,7 @@ public class RadioView extends JFrame {
      * Clears text, for errors.
      */
     public void clearText() {
-        infoField.setText("");
+        infoField.setText(null);
         infoField.setVisible(false);
         glassLabel1.setVisible(true);
         glassPane.setVisible(false);
