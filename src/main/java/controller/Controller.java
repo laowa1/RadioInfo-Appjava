@@ -121,7 +121,8 @@ public class Controller {
                 channelWorker();
             } else {
                 for (ChannelInfo channelInfo : cList) {
-                    if (Objects.equals(channelInfo.getName(), e.getActionCommand())) {
+                    if (Objects.equals(channelInfo.getName(),
+                            e.getActionCommand())) {
                         switching = true;
                         programName = e.getActionCommand();
                         view.setHeader(channelInfo.getImageURL());
@@ -152,7 +153,9 @@ public class Controller {
      * Adds listeners to the table
      */
     synchronized private  void addTableListeners() {
-        view.getMyTable().addListenersToTable(new TableSelectionListener(view.getMyTable().getTable(), this));
+        view.getMyTable().addListenersToTable(
+                new TableSelectionListener(
+                        view.getMyTable().getTable(), this));
     }
 
     /**
@@ -164,18 +167,23 @@ public class Controller {
             if (cList.get(i).getName().equals(programName)) {
                 if (index <= cList.size()) {
                     try {
-                        if (cList.get(i).getProgramList().get(index).getImageURL() != null) {
-                            view.getInfoPanel().setImage(cList.get(i).getProgramList().get(index).getImageURL());
+                        if (cList.get(i).getProgramList().get(index)
+                                .getImageURL() != null) {
+                            view.getInfoPanel().setImage(cList.get(i)
+                                    .getProgramList().get(index).getImageURL());
                         } else {
                             view.getInfoPanel().setImage("/textures/sr.jpg");
                         }
                     } catch (IOException e) {
                         showErrors("Error: " + e.toString());
                     }
-                    if (cList.get(i).getProgramList().get(index).getTagLine() != null) {
-                        view.getInfoPanel().setDescription(cList.get(i).getProgramList().get(index).getTagLine());
+                    if (cList.get(i).getProgramList().get(index).getTagLine()
+                            != null) {
+                        view.getInfoPanel().setDescription(cList.get(i)
+                                .getProgramList().get(index).getTagLine());
                     } else {
-                        view.getInfoPanel().setDescription("Ingen information tillgänglig.");
+                        view.getInfoPanel().setDescription(
+                                "Ingen information tillgänglig.");
                     }
                     break;
                 }

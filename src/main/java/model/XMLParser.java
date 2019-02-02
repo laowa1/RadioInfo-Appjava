@@ -70,15 +70,20 @@ public class XMLParser {
         LocalDateTime localDateTime = LocalDateTime.now();
         DateTimeFormatter format = DateTimeFormatter.ofPattern("yyyy-MM-dd");
             for (ChannelInfo cI : cList) {
-                URL url1 = new URL(cI.getScheduleURL().toString() + "&pagination=false" + "&date=" + localDateTime.minusHours(12).format(format));
+                URL url1 = new URL(cI.getScheduleURL().toString()
+                        + "&pagination=false" + "&date="
+                        + localDateTime.minusHours(12).format(format));
                 List<ProgramInfo> pList = new ArrayList<>(returnPrograms(url1));
-                URL url2 = new URL(cI.getScheduleURL().toString() + "&pagination=false" + "&date=" + localDateTime.plusHours(12).format(format));
+                URL url2 = new URL(cI.getScheduleURL().toString()
+                        + "&pagination=false" + "&date="
+                        + localDateTime.plusHours(12).format(format));
                 pList.addAll(returnPrograms(url2));
                 cI.setProgramList(pList);
             }
     }
 
-        private List<ProgramInfo> returnPrograms(URL url) throws ParserConfigurationException, IOException, SAXException {
+        private List<ProgramInfo> returnPrograms(URL url) throws
+                ParserConfigurationException, IOException, SAXException {
 
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
@@ -89,16 +94,22 @@ public class XMLParser {
                 Node n = l.item(k);
                 if (n.getNodeType() == Node.ELEMENT_NODE) {
                     Element e2 = (Element) n;
-                    ProgramInfo pI = new ProgramInfo(e2.getElementsByTagName("title").item(0).getTextContent());
-                    //pI.setId(Integer.parseInt(e.getElementsByTagName("episodeid").item(0).getTextContent()));
-                    if (e2.getElementsByTagName("description").getLength() > 0) {
-                        pI.setTagLine(e2.getElementsByTagName("description").item(0).getTextContent());
+                    ProgramInfo pI = new ProgramInfo(
+                            e2.getElementsByTagName("title").item(0)
+                                    .getTextContent());
+                    if (e2.getElementsByTagName("description").getLength() > 0)
+                    {
+                        pI.setTagLine(e2.getElementsByTagName("description")
+                                .item(0).getTextContent());
                     }
                     if (e2.getElementsByTagName("imageurl").getLength() > 0) {
-                        pI.setImageURL(new URL(e2.getElementsByTagName("imageurl").item(0).getTextContent()));
+                        pI.setImageURL(new URL(e2.getElementsByTagName(
+                                "imageurl").item(0).getTextContent()));
                     }
-                    pI.setStartTimeUTC(e2.getElementsByTagName("starttimeutc").item(0).getTextContent());
-                    pI.setEndTimeUTC(e2.getElementsByTagName("endtimeutc").item(0).getTextContent());
+                    pI.setStartTimeUTC(e2.getElementsByTagName("starttimeutc")
+                            .item(0).getTextContent());
+                    pI.setEndTimeUTC(e2.getElementsByTagName("endtimeutc")
+                            .item(0).getTextContent());
                     if (checkTime(pI)) {
                         pList.add(pI);
                     }
@@ -122,12 +133,16 @@ public class XMLParser {
                 ChannelInfo cI = new ChannelInfo(e.getAttribute("name"));
                 cI.setId(Integer.parseInt(e.getAttribute("id")));
                 if(e.getElementsByTagName("tagline").getLength() > 0) {
-                    cI.setTagLine(e.getElementsByTagName("tagline").item(0).getTextContent());
+                    cI.setTagLine(e.getElementsByTagName("tagline")
+                            .item(0).getTextContent());
                 }
-                cI.setImageURL(new URL(e.getElementsByTagName("image").item(0).getTextContent()));
+                cI.setImageURL(new URL(e.getElementsByTagName("image")
+                        .item(0).getTextContent()));
                 if(e.getElementsByTagName("scheduleurl").getLength() > 0){
-                    cI.setScheduleURL(new URL(e.getElementsByTagName("scheduleurl").item(0).getTextContent()));
-                    cI.setSiteURL(new URL(e.getElementsByTagName("siteurl").item(0).getTextContent()));
+                    cI.setScheduleURL(new URL(e.getElementsByTagName(
+                            "scheduleurl").item(0).getTextContent()));
+                    cI.setSiteURL(new URL(e.getElementsByTagName(
+                            "siteurl").item(0).getTextContent()));
                     cList.add(cI);
                 }
             }
@@ -141,14 +156,17 @@ public class XMLParser {
      */
     private boolean checkTime(ProgramInfo pI) {
         LocalDateTime time = LocalDateTime.now();
-        LocalDateTime time2 = LocalDateTime.parse(pI.getStartTimeUTC().replaceAll("Z$", ""));
-        return time.minusHours(12).isBefore(time2) && time.plusHours(12).isAfter(time2);
+        LocalDateTime time2 = LocalDateTime.parse(pI.getStartTimeUTC()
+                .replaceAll("Z$", ""));
+        return time.minusHours(12).isBefore(time2)
+                && time.plusHours(12).isAfter(time2);
     }
 
     /**
      * Function for updating.
      */
-    public void update() throws IOException, SAXException, ParserConfigurationException {
+    public void update() throws IOException, SAXException,
+                                ParserConfigurationException {
         if (apiURL != null) {
             for (ChannelInfo channelInfo : cList) {
                 if (channelInfo.getProgramList() != null) {

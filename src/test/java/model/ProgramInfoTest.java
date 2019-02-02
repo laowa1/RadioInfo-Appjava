@@ -24,7 +24,7 @@ public class ProgramInfoTest {
      */
     @Test
     public void testGetName() {
-        assertEquals("test",programInfo.getName());
+        assertEquals("test", programInfo.getName());
     }
 
     /**
@@ -34,7 +34,7 @@ public class ProgramInfoTest {
     @Test
     public void testImageURL() throws MalformedURLException {
         programInfo.setImageURL(new URL
-                ("https://static-cdn.sr.se/sida/images/4540/3634468_2048_1152.jpg?preset=api-default-square"));
+        ("https://static-cdn.sr.se/sida/images/4540/3634468_2048_1152.jpg"));
         assertNotNull(programInfo.getImageURL());
     }
 

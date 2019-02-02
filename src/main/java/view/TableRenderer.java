@@ -15,8 +15,10 @@ import java.time.format.DateTimeFormatter;
  * @author Jakob Fridesjö
  */
 public class TableRenderer implements TableCellRenderer {
-    public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected,
-                                                   boolean hasFocus, int row, int column) {
+    public Component getTableCellRendererComponent(JTable table, Object value,
+                                                   boolean isSelected,
+                                                   boolean hasFocus, int row,
+                                                   int column) {
 
 
         DateTimeFormatter isoDateTime = DateTimeFormatter.ISO_DATE_TIME;
@@ -28,20 +30,23 @@ public class TableRenderer implements TableCellRenderer {
         editor.setFont(myFont);
         editor.setOpaque(true);
         if (column > 0 && value != null && value.toString().length() > 13) {
-            LocalDateTime timeValue = LocalDateTime.parse(value.toString(), isoDateTime);
+            LocalDateTime timeValue = LocalDateTime.parse(value.toString(),
+                    isoDateTime);
             String timeText = timeValue.format(isoTime);
-            editor.setBounds(new Rectangle(table.getWidth()/6, table.getRowHeight()));
-            final String substring = timeText.substring(0, timeText.length() - 3);
+            editor.setBounds(new Rectangle(table.getWidth()/6,
+                    table.getRowHeight()));
+            final String substring = timeText.substring(
+                    0, timeText.length() - 3);
             if (time.isAfter(timeValue)) {
-                editor.setBackground(new Color(210, 120, 105, 200));
+                editor.setBackground(new Color(210,120,105,200));
                 editor.setText('(' + substring + ')');
             } else {
-                editor.setBackground(new Color(180, 210, 100, 200));
+                editor.setBackground(new Color(180,210,100,200));
                 editor.setText(substring);
             }
         } else if (value != null) {
             if ((row % 2) != 0) {
-                editor.setBackground(new Color(150, 220, 220, 90));
+                editor.setBackground(new Color(150,220,220,90));
             }
             editor.setText(value.toString());
         }

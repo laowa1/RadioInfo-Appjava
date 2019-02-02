@@ -43,7 +43,6 @@ public class MenuBar extends JMenuBar {
     public void addChannel(ChannelInfo cI) {
         JMenuItem cItem = new JMenuItem((cI.getName()));
         channelMenu.add(cItem);
-        //AItem.addActionListener(e -> System.out.println(e.getActionCommand()));
         itemList.add(cItem);
     }
 

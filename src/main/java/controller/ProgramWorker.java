@@ -39,9 +39,8 @@ class ProgramWorker extends SwingWorker {
      * @throws IOException io error
      */
     @Override
-    protected Object doInBackground() throws
-                                                 ParserConfigurationException,
-                                                 SAXException, IOException {
+    protected Object doInBackground() throws ParserConfigurationException,
+                                                SAXException, IOException {
         xml.parseProgram(cList);
         return true;
     }

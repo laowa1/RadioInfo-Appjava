@@ -28,7 +28,8 @@ class ChannelWorker extends SwingWorker<Boolean, ChannelInfo> {
      * @param xml - xml to parse
      * @param crl - controller instance
      */
-    ChannelWorker(XMLParser xml, Controller crl) throws IOException, SAXException, ParserConfigurationException {
+    ChannelWorker(XMLParser xml, Controller crl) throws IOException,
+                                    SAXException, ParserConfigurationException {
         xml.parseToDoc();
         this.xml = xml;
         this.crl = crl;

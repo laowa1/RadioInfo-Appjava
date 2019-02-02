@@ -41,7 +41,8 @@ public class RadioView extends JFrame {
         glassPane.setSize(f_WIDTH, f_HEIGHT);
         glassPane.setLayout(new BorderLayout());
         String loading = "/textures/loading.gif";
-        glassLabel1 = new JLabel(new ImageIcon(getClass().getResource(loading)));
+        glassLabel1 = new JLabel(new ImageIcon(getClass()
+                .getResource(loading)));
         infoField = new JTextField();
         infoField.setFont(new Font("Sans", Font.PLAIN, 40));
         infoField.setHorizontalAlignment(JTextField.CENTER);

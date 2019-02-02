@@ -34,7 +34,7 @@ public class ChannelInfoTest {
     @Test
     public void testImageURL() throws MalformedURLException {
         channelInfo.setImageURL(new URL
-                ("https://static-cdn.sr.se/sida/images/4540/3634468_2048_1152.jpg?preset=api-default-square"));
+        ("https://static-cdn.sr.se/sida/images/4540/3634468_2048_1152.jpg"));
         assertNotNull(channelInfo.getImageURL());
     }
 

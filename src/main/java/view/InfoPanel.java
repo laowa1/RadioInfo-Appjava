@@ -45,7 +45,8 @@ public class InfoPanel extends JPanel {
         info.setWrapStyleWord(true);
         info.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(info);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setHorizontalScrollBarPolicy(
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
         scrollPane.setPreferredSize(new Dimension(200, 150));
         info.setFont(new Font("Sans", Font.PLAIN, 17));
         //setPreferredSize(new Dimension(400,150));
@@ -70,11 +71,13 @@ public class InfoPanel extends JPanel {
     public void setImage(URL url) throws IOException {
         BufferedImage image = ImageIO.read(url);
         if (label.getHeight() > label.getWidth()) {
-            ImageIcon img1 = scaleV1(image, label.getWidth(),label.getWidth(), false);
+            ImageIcon img1 = scaleV1(image, label.getWidth(),label.getWidth(),
+                    false);
             label.setIcon(img1);
         } else {
             scaleV1(image, label.getWidth(), label.getWidth(),false);
-            ImageIcon img1 = scaleV1(image, label.getHeight(),label.getHeight(), false);
+            ImageIcon img1 = scaleV1(image, label.getHeight(),label.getHeight(),
+                    false);
             label.setIcon(img1);
         }
         this.label.setBackground(new Color(image.getRGB(0,0)));
@@ -88,10 +91,12 @@ public class InfoPanel extends JPanel {
     public void setImage(String name) throws IOException {
         BufferedImage image = ImageIO.read(getClass().getResource(name));
         if (label.getHeight() > label.getWidth()) {
-            ImageIcon image2 = scaleV1(image, label.getWidth(), label.getWidth(), false);
+            ImageIcon image2 = scaleV1(image,label.getWidth(),label.getWidth(),
+                    false);
             label.setIcon(image2);
         } else {
-            ImageIcon image2 = scaleV1(image, label.getHeight(), label.getHeight(), false);
+            ImageIcon image2 = scaleV1(image,label.getHeight(),label.getHeight()
+                    , false);
             label.setIcon(image2);
         }
         label.setBackground(new Color(image.getRGB(0, 0)));
@@ -126,12 +131,15 @@ public class InfoPanel extends JPanel {
      */
     @SuppressWarnings("SameParameterValue")
     private ImageIcon scaleV1(Image img, int w, int h, boolean fast){
-        BufferedImage scaledImg = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        BufferedImage scaledImg = new BufferedImage(w, h,
+                BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = scaledImg.createGraphics();
         if (fast) {
-            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
+            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                    RenderingHints.VALUE_INTERPOLATION_NEAREST_NEIGHBOR);
         } else {
-            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION, RenderingHints.VALUE_INTERPOLATION_BICUBIC);
+            g2.setRenderingHint(RenderingHints.KEY_INTERPOLATION,
+                    RenderingHints.VALUE_INTERPOLATION_BICUBIC);
         }
         g2.drawImage(img, 0, 0, w, h, null);
         g2.dispose();
