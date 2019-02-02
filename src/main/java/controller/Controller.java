@@ -51,7 +51,6 @@ public class Controller {
      * Creates a new program worker.
      */
      void programWorker() {
-        view.startLoadingOverlay(true);
         try {
             xml.update();
         } catch (IOException | SAXException | ParserConfigurationException e) {
@@ -66,7 +65,7 @@ public class Controller {
      */
     private void channelWorker() {
         try {
-            view.startLoadingOverlay(true);
+            //view.startLoadingOverlay(true);
             String url = "http://api.sr.se/api/v2/channels?pagination=false";
             xml = new XMLParser(new URL(url));
             ChannelWorker cWorker = new ChannelWorker(xml, this);
@@ -139,7 +138,6 @@ public class Controller {
      * @param pList list of programs.
      */
     private  void refreshTable(List<ProgramInfo> pList) {
-        view.getMyTable().resetScrollPosition();
         view.getMyTable().setpList(pList);
         view.getMyTable().refreshMyTable();
        // addListenersToTable();
@@ -166,6 +164,7 @@ public class Controller {
             if (cList.get(i).getName().equals(programName)) {
                 if (index <= cList.size()) {
                     try {
+                        System.out.println(cList.get(i).getProgramList().get(index).getImageURL());
                         if (cList.get(i).getProgramList().get(index).getImageURL() != null) {
                             view.getInfoPanel().setImage(cList.get(i).getProgramList().get(index).getImageURL());
                         } else {
@@ -204,6 +203,7 @@ public class Controller {
                 programName = cList.get(0).getName();
                 view.setHeader(cList.get(0).getImageURL());
                 refreshTable(cList.get(0).getProgramList());
+                view.stopLoadingOverlay();
             }
         }
         done = true;

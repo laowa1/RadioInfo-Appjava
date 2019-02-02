@@ -78,7 +78,7 @@ public class XMLParser {
             }
     }
 
-        public List<ProgramInfo> returnPrograms(URL url) throws ParserConfigurationException, IOException, SAXException {
+        private List<ProgramInfo> returnPrograms(URL url) throws ParserConfigurationException, IOException, SAXException {
 
             DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
             DocumentBuilder db = dbf.newDocumentBuilder();
