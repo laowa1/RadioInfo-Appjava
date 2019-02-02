@@ -6,6 +6,7 @@ import model.XMLParser;
 import org.xml.sax.SAXException;
 import view.RadioView;
 
+import javax.swing.*;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.net.URL;
@@ -34,7 +35,7 @@ public class Controller {
      * Sets the list for channels.
      * @param cList channel list.
      */
-     void setList(List<ChannelInfo> cList) {
+     synchronized void setList(List<ChannelInfo> cList) {
         this.cList = cList;
     }
 
@@ -50,7 +51,7 @@ public class Controller {
     /**
      * Creates a new program worker.
      */
-     void programWorker() {
+     synchronized void programWorker() {
         try {
             xml.update();
         } catch (IOException | SAXException | ParserConfigurationException e) {
@@ -63,7 +64,7 @@ public class Controller {
     /**
      * Function that refreshes worker.
      */
-    private void channelWorker() {
+    synchronized private void channelWorker() {
         try {
             //view.startLoadingOverlay(true);
             String url = "http://api.sr.se/api/v2/channels?pagination=false";
@@ -79,7 +80,7 @@ public class Controller {
      * Shows error in view.
      * @param s string
      */
-    private  void showErrors(String s) {
+    synchronized private  void showErrors(String s) {
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -99,7 +100,7 @@ public class Controller {
     /**
      * Refreshes worker hourly.
      */
-    private  void setTimer() {
+    synchronized private  void setTimer() {
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -113,11 +114,10 @@ public class Controller {
     /**
      * Adds listeners to the menu.
      */
-    private  void addListenersToMenu() {
+    synchronized private  void addListenersToMenu() {
         view.getMyMenuBar().addListenersToMenu(e -> {
             if (Objects.equals(e.getActionCommand(), "Uppdatera")) {
                 view.startLoadingOverlay(false);
-                showErrors("Error: " + new SAXException().toString());
                 channelWorker();
             } else {
                 for (ChannelInfo channelInfo : cList) {
@@ -137,7 +137,7 @@ public class Controller {
      * Refreshes the table.
      * @param pList list of programs.
      */
-    private  void refreshTable(List<ProgramInfo> pList) {
+    synchronized private  void refreshTable(List<ProgramInfo> pList) {
         view.getMyTable().setpList(pList);
         view.getMyTable().refreshMyTable();
        // addListenersToTable();
@@ -151,7 +151,7 @@ public class Controller {
     /**
      * Adds listeners to the table
      */
-    private  void addTableListeners() {
+    synchronized private  void addTableListeners() {
         view.getMyTable().addListenersToTable(new TableSelectionListener(view.getMyTable().getTable(), this));
     }
 
@@ -159,12 +159,11 @@ public class Controller {
      * Sets info about program
      * @param index list index for program
      */
-     void setProgramInfo(int index) {
+     synchronized void setProgramInfo(int index) {
         for (int i = 0; i < cList.size(); i++) {
             if (cList.get(i).getName().equals(programName)) {
                 if (index <= cList.size()) {
                     try {
-                        System.out.println(cList.get(i).getProgramList().get(index).getImageURL());
                         if (cList.get(i).getProgramList().get(index).getImageURL() != null) {
                             view.getInfoPanel().setImage(cList.get(i).getProgramList().get(index).getImageURL());
                         } else {
@@ -187,7 +186,7 @@ public class Controller {
     /**
      * Signal that channel parsing has been completed.
      */
-     void signalChannelDone() {
+     synchronized void signalChannelDone() {
         view.getMyMenuBar().clearChannels();
         view.getMyMenuBar().addChannels(cList);
         addListenersToMenu();
@@ -196,7 +195,7 @@ public class Controller {
     /**
      * Disables overlay and loads first channel/program.
      */
-     void signalProgramDone() {
+     synchronized void signalProgramDone() {
         view.stopLoadingOverlay();
         if (!done) {
             if (cList.size() > 0) {

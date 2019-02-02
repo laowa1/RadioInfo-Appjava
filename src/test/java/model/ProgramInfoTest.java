@@ -40,11 +40,10 @@ public class ProgramInfoTest {
 
     /**
      * Tests url loading
-     * @throws MalformedURLException malformed url
      */
     @Test
-    public void testNullURL() throws MalformedURLException {
-        programInfo.setImageURL(new URL(null));
+    public void testNullURL() {
+        programInfo.setImageURL(null);
         assertNull(programInfo.getImageURL());
     }
 }

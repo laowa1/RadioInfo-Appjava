@@ -40,11 +40,10 @@ public class ChannelInfoTest {
 
     /**
      * Tests url loading
-     * @throws MalformedURLException malformed url
      */
     @Test
-    public void testNullURL() throws MalformedURLException {
-        channelInfo.setImageURL(new URL(null));
+    public void testNullURL() {
+        channelInfo.setImageURL(null);
         assertNull(channelInfo.getImageURL());
     }
 }
