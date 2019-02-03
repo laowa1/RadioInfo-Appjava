@@ -10,7 +10,7 @@ import java.time.format.DateTimeFormatter;
 /**
  * Renderer for table.
  * @UserID - tfy17jfo
- * @date - 2018-12-10
+ * @date - 2018-01-25
  * @version 1.0
  * @author Jakob Fridesjö
  */
