@@ -35,7 +35,7 @@ public class Controller {
      * Sets the list for channels.
      * @param cList channel list.
      */
-     synchronized void setList(List<ChannelInfo> cList) {
+    void setList(List<ChannelInfo> cList) {
         this.cList = cList;
     }
 
@@ -51,11 +51,11 @@ public class Controller {
     /**
      * Creates a new program worker.
      */
-     synchronized void programWorker() {
+    void programWorker() {
         try {
             xml.update();
         } catch (IOException | SAXException | ParserConfigurationException e) {
-            showErrors("Error: " + e.toString());
+            showErrors("Error: Unable to load programs from SR");
         }
         ProgramWorker pWorker = new ProgramWorker(xml, cList, this);
         pWorker.execute();
@@ -64,7 +64,8 @@ public class Controller {
     /**
      * Function that refreshes worker.
      */
-    synchronized private void channelWorker() {
+    private void channelWorker() {
+        done = false;
         try {
             //view.startLoadingOverlay(true);
             String url = "http://api.sr.se/api/v2/channels?pagination=false";
@@ -72,7 +73,7 @@ public class Controller {
             ChannelWorker cWorker = new ChannelWorker(xml, this);
             cWorker.execute();
         } catch (IOException | SAXException | ParserConfigurationException e) {
-            showErrors("Error: " + e.toString());
+            showErrors("Error: Unable to load channels from SR");
         }
     }
 
@@ -80,7 +81,7 @@ public class Controller {
      * Shows error in view.
      * @param s string
      */
-    synchronized private  void showErrors(String s) {
+    private  void showErrors(String s) {
         Timer timer = new Timer();
         timer.schedule(new TimerTask() {
             @Override
@@ -93,14 +94,15 @@ public class Controller {
                 }
                 view.clearText();
                 timer.cancel();
+                timer.purge();
             }
-        },100,100);
+        },1,100);
     }
 
     /**
      * Refreshes worker hourly.
      */
-    synchronized private  void setTimer() {
+    private  void setTimer() {
         Timer timer = new Timer();
         timer.scheduleAtFixedRate(new TimerTask() {
             @Override
@@ -108,20 +110,22 @@ public class Controller {
                 view.startLoadingOverlay(true);
                 channelWorker();
             }
-        }, 0, 240000);
+        }, 0, 3600000);
     }
 
     /**
      * Adds listeners to the menu.
      */
-    synchronized private  void addListenersToMenu() {
+    private  void addListenersToMenu() {
         view.getMyMenuBar().addListenersToMenu(e -> {
             if (Objects.equals(e.getActionCommand(), "Uppdatera")) {
-                view.startLoadingOverlay(false);
-                channelWorker();
+                if (done) {
+                    view.startLoadingOverlay(false);
+                    channelWorker();
+                }
             } else {
                 for (ChannelInfo channelInfo : cList) {
-                    if (Objects.equals(channelInfo.getName(),
+                    if (done && Objects.equals(channelInfo.getName(),
                             e.getActionCommand())) {
                         switching = true;
                         programName = e.getActionCommand();
@@ -138,10 +142,10 @@ public class Controller {
      * Refreshes the table.
      * @param pList list of programs.
      */
-    synchronized private  void refreshTable(List<ProgramInfo> pList) {
+    private  void refreshTable(List<ProgramInfo> pList) {
         view.getMyTable().setpList(pList);
         view.getMyTable().refreshMyTable();
-       // addListenersToTable();
+        // addListenersToTable();
         if (!listen2) {
             addTableListeners();
             listen2 = true;
@@ -152,7 +156,7 @@ public class Controller {
     /**
      * Adds listeners to the table
      */
-    synchronized private  void addTableListeners() {
+    private  void addTableListeners() {
         view.getMyTable().addListenersToTable(
                 new TableSelectionListener(
                         view.getMyTable().getTable(), this));
@@ -162,30 +166,35 @@ public class Controller {
      * Sets info about program
      * @param index list index for program
      */
-     synchronized void setProgramInfo(int index) {
-        for (int i = 0; i < cList.size(); i++) {
-            if (cList.get(i).getName().equals(programName)) {
-                if (index <= cList.size()) {
-                    try {
-                        if (cList.get(i).getProgramList().get(index)
-                                .getImageURL() != null) {
-                            view.getInfoPanel().setImage(cList.get(i)
-                                    .getProgramList().get(index).getImageURL());
-                        } else {
-                            view.getInfoPanel().setImage("/textures/sr.jpg");
+    void setProgramInfo(int index) {
+        if (done) {
+            for (int i = 0; i < cList.size(); i++) {
+                if (cList.get(i).getName().equals(programName)) {
+                    if (index <= cList.size()) {
+                        try {
+                            if (cList.get(i).getProgramList().get(index)
+                                    .getImageURL() != null) {
+                                view.getInfoPanel().setImage(cList.get(i)
+                                        .getProgramList().get(index)
+                                        .getImageURL());
+                            } else {
+                                view.getInfoPanel()
+                                        .setImage("/textures/sr.jpg");
+                            }
+                        } catch (IOException e) {
+                            showErrors(
+                                    "Error: Failed to load program image.");
                         }
-                    } catch (IOException e) {
-                        showErrors("Error: " + e.toString());
+                        if (cList.get(i).getProgramList().get(index)
+                                .getTagLine() != null) {
+                            view.getInfoPanel().setDescription(cList.get(i)
+                                    .getProgramList().get(index).getTagLine());
+                        } else {
+                            view.getInfoPanel().setDescription(
+                                    "Ingen information tillgänglig.");
+                        }
+                        break;
                     }
-                    if (cList.get(i).getProgramList().get(index).getTagLine()
-                            != null) {
-                        view.getInfoPanel().setDescription(cList.get(i)
-                                .getProgramList().get(index).getTagLine());
-                    } else {
-                        view.getInfoPanel().setDescription(
-                                "Ingen information tillgänglig.");
-                    }
-                    break;
                 }
             }
         }
@@ -194,7 +203,7 @@ public class Controller {
     /**
      * Signal that channel parsing has been completed.
      */
-     synchronized void signalChannelDone() {
+    void signalChannelDone() {
         view.getMyMenuBar().clearChannels();
         view.getMyMenuBar().addChannels(cList);
         addListenersToMenu();
@@ -203,7 +212,7 @@ public class Controller {
     /**
      * Disables overlay and loads first channel/program.
      */
-     synchronized void signalProgramDone() {
+    void signalProgramDone() {
         view.stopLoadingOverlay();
         if (!done) {
             if (cList.size() > 0) {

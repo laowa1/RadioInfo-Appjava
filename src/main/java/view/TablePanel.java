@@ -114,4 +114,9 @@ public class TablePanel extends JPanel {
     public void resetScrollPosition() {
         scrollPosition = 0;
     }
+
+    public void removeListeners(TableSelectionListener l) {
+        ListSelectionModel lModel = table.getSelectionModel();
+        lModel.removeListSelectionListener(l);
+    }
 }
