@@ -20,8 +20,10 @@ public class ParserTest {
     private XMLParser parser;
 
     @Before
-    public void setUp() throws IOException, SAXException, ParserConfigurationException {
-        parser = new XMLParser(new URL("http://api.sr.se/api/v2/channels?pagination=false"));
+    public void setUp() throws IOException, SAXException,
+            ParserConfigurationException {
+        parser = new XMLParser(new URL(
+                "http://api.sr.se/api/v2/channels?pagination=false"));
         parser.parseToDoc();
 
     }
@@ -38,7 +40,8 @@ public class ParserTest {
 
 
     @Test
-    public void parseChannelsAndPrograms() throws IOException, ParserConfigurationException, SAXException {
+    public void parseChannelsAndPrograms() throws IOException,
+            ParserConfigurationException, SAXException {
         List<ChannelInfo> cList = parser.parseChannels();
         parser.parseProgram(cList);
         assertNotNull(cList.get(0).getName());
