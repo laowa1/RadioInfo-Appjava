@@ -6,14 +6,13 @@ import model.XMLParser;
 import org.xml.sax.SAXException;
 import view.RadioView;
 
-import javax.swing.*;
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.IOException;
 import java.net.URL;
 import java.util.List;
 import java.util.Objects;
-import java.util.TimerTask;
 import java.util.Timer;
+import java.util.TimerTask;
 
 /**
  * controller class for starting a test instance.

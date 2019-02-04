@@ -6,21 +6,15 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 import org.xml.sax.SAXException;
 
-import javax.swing.*;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
-import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.io.IOException;
 import java.net.MalformedURLException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
-import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -35,7 +29,7 @@ public class XMLParser {
     private List<ChannelInfo> cList;
     Document doc = null;
     private final URL apiURL;
-    private SimpleDateFormat dateTime;
+    //private SimpleDateFormat dateTime;
 
     /**
      * Constructs parser.
@@ -43,7 +37,7 @@ public class XMLParser {
      */
     public XMLParser(URL url) {
         apiURL = url;
-        dateTime = new SimpleDateFormat("yyyy-MM-dd");
+      //  dateTime = new SimpleDateFormat("yyyy-MM-dd");
     }
 
     /**

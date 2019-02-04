@@ -4,12 +4,11 @@ import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.image.BufferedImage;
-import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
 /**
- * Infopanel for showing description and image.
+ * InfoPanel for showing description and image.
  * @UserID - tfy17jfo
  * @date - 2018-12-10
  * @version 1.0

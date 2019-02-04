@@ -23,8 +23,8 @@ public class RadioView extends JFrame {
     private JPanel infoPanel;
     private final JLabel topLabel;
     private final JPanel glassPane;
-    private JTextField infoField;
-    private JLabel glassLabel1;
+    private final JTextField infoField;
+    private final JLabel glassLabel1;
     /**
      * Creates the view.
      * @param title of program
@@ -141,7 +141,7 @@ public class RadioView extends JFrame {
     }
 
     /**
-     * Stps overlay
+     * Stops overlay
      */
     public void stopLoadingOverlay() {
         glassPane.setVisible(false);

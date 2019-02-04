@@ -14,7 +14,7 @@ import java.time.format.DateTimeFormatter;
  * @version 1.0
  * @author Jakob Fridesjö
  */
-public class TableRenderer implements TableCellRenderer {
+class TableRenderer implements TableCellRenderer {
     public Component getTableCellRendererComponent(JTable table, Object value,
                                                    boolean isSelected,
                                                    boolean hasFocus, int row,

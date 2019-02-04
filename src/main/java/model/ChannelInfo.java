@@ -95,7 +95,7 @@ public class ChannelInfo {
     }
 
     /**
-     * Sets description/tagline
+     * Sets description/tagLine
      * @param tagLine to set
      */
     void setTagLine(String tagLine) {
@@ -103,7 +103,7 @@ public class ChannelInfo {
     }
 
     /**
-     * Gets tagline
+     * Gets tagLine
      * @return tagLine
      */
     public String getTagLine() {
