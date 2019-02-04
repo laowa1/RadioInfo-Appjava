@@ -40,7 +40,7 @@ public class TablePanel extends JPanel {
         setLayout(new BorderLayout());
         table = new JTable(tModel);
         table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        table.setRowHeight(50);
+        table.setRowHeight(45);
         table.setDefaultRenderer(Object.class, new TableRenderer());
         scrollPane = new JScrollPane(table);
         scrollPane.setHorizontalScrollBarPolicy(
@@ -59,32 +59,26 @@ public class TablePanel extends JPanel {
      */
     public void refreshMyTable() {
         table.removeAll();
-        //scrollPosition = scrollPane.getVerticalScrollBar().getValue();
-        //LocalDateTime time = LocalDateTime.now();
-        try {
+        //try {
             tModel.setRowCount(0);
             for (ProgramInfo programInfo : pList) {
                 tModel.addRow(new Object[]{programInfo.getName(),
                         programInfo.getStartTimeUTC(),
                         programInfo.getEndTimeUTC()});
-                //parseTimes(pList.get(i).getStartTimeUTC(),
-
-                //         pList.get(i).getEndTimeUTC())});
             }
             table.setGridColor(new Color(150, 220, 220, 120));
-            //table.setIntercellSpacing(new Dimension(0,0));
             TableColumn column;
             for (int i = 0; i < 3; i++) {
                 column = table.getColumnModel().getColumn(i);
                 if (i > 0) {
-                    column.setPreferredWidth(40); //third column is bigger
+                    column.setPreferredWidth(35); //third column is bigger
                 } else {
-                    column.setPreferredWidth(400);
+                    column.setPreferredWidth(340);
                 }
             }
-        } finally {
+        //} finally {
          //   scrollPane.getVerticalScrollBar().setValue(scrollPosition);
-        }
+        //}
     }
 
     /**

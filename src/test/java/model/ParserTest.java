@@ -44,5 +44,6 @@ public class ParserTest {
         List<ChannelInfo> cList = parser.parseChannels();
         parser.parseProgram(cList);
         assertNotNull(cList.get(0).getName());
+        assertNotNull(cList.get(0).getProgramList().get(0).getName());
     }
 }
