@@ -222,10 +222,10 @@ public class Controller {
         view.stopLoadingOverlay();
         if (!done) {
             if (cList.size() > 0) {
-                for (int i = 0; i < cList.size(); i++) {
-                    if (cList.get(i).getName().equals(programName)) {
-                        view.setHeader(cList.get(i).getImageURL());
-                        refreshTable(cList.get(i).getProgramList());
+                for (ChannelInfo channelInfo : cList) {
+                    if (channelInfo.getName().equals(programName)) {
+                        view.setHeader(channelInfo.getImageURL());
+                        refreshTable(channelInfo.getProgramList());
                     } else if (programName == null) {
                         view.setHeader(cList.get(0).getImageURL());
                         refreshTable(cList.get(0).getProgramList());
