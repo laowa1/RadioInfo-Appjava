@@ -3,8 +3,7 @@ import javax.swing.*;
 import controller.Controller;
 
 /**
- * Program for testing classes in a similar fashion to
- * testing them using the JUnit framework.
+ * Program for showing Radio schedules from Swedish Radio SR
  * @UserID - tfy17jfo
  * @date - 2018-11-21
  * @version: 1.0
