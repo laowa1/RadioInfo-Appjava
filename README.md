@@ -1,6 +1,6 @@
 # RadioInfo-Appjava
 
-github clone https://github.com/laowa1/RadioInfo-Appjava.git
+git clone https://github.com/laowa1/RadioInfo-Appjava.git
 
 cd RadioInfo-Appjava
 
