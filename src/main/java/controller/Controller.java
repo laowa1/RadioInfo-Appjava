@@ -130,6 +130,13 @@ public class Controller {
                         programName = e.getActionCommand();
                         view.setHeader(channelInfo.getImageURL());
                         refreshTable(channelInfo.getProgramList());
+                        try {
+                            view.getInfoPanel().setImage("/textures/sr.jpg");
+                            view.getInfoPanel().setDescription("Klicka i " +
+                                    "tabellen för att välja program");
+                        } catch (IOException e1) {
+                            showErrors("Error: Could not load image");
+                        }
                         switching = false;
                     }
                 }
@@ -167,13 +174,13 @@ public class Controller {
      */
     void setProgramInfo(int index) {
         if (done) {
-            for (int i = 0; i < cList.size(); i++) {
-                if (cList.get(i).getName().equals(programName)) {
-                    if (index <= cList.get(i).getProgramList().size()) {
+            for (ChannelInfo channelInfo : cList) {
+                if (channelInfo.getName().equals(programName)) {
+                    if (index <= channelInfo.getProgramList().size()) {
                         try {
-                            if (cList.get(i).getProgramList().get(index)
+                            if (channelInfo.getProgramList().get(index)
                                     .getImageURL() != null) {
-                                view.getInfoPanel().setImage(cList.get(i)
+                                view.getInfoPanel().setImage(channelInfo
                                         .getProgramList().get(index)
                                         .getImageURL());
                             } else {
@@ -184,9 +191,9 @@ public class Controller {
                             showErrors(
                                     "Error: Failed to load program image.");
                         }
-                        if (cList.get(i).getProgramList().get(index)
+                        if (channelInfo.getProgramList().get(index)
                                 .getTagLine().length() > 0) {
-                            view.getInfoPanel().setDescription(cList.get(i)
+                            view.getInfoPanel().setDescription(channelInfo
                                     .getProgramList().get(index).getTagLine());
                         } else {
                             view.getInfoPanel().setDescription(

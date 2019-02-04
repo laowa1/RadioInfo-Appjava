@@ -65,7 +65,7 @@ public class InfoPanel extends JPanel {
      */
     private JTextArea setupTextArea() {
         JTextArea textArea = new JTextArea();
-        textArea.append("Tryck på en kanal för att se information.");
+        textArea.append("Klicka i tabellen för att välja program");
         textArea.setLineWrap(true);
         textArea.setWrapStyleWord(true);
         textArea.setEditable(false);
@@ -75,7 +75,7 @@ public class InfoPanel extends JPanel {
     * Sets info about program.
     */
     public void setDescription(String text) {
-        info.setText("\n" + text);
+        info.setText(text);
     }
 
     /**
