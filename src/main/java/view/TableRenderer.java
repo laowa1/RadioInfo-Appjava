@@ -25,8 +25,8 @@ class TableRenderer implements TableCellRenderer {
         DateTimeFormatter isoTime = DateTimeFormatter.ISO_TIME;
         JTextField editor = new JTextField();
         LocalDateTime time = LocalDateTime.now();
-        Font myFont = new Font(Font.MONOSPACED, Font.BOLD, 14).deriveFont(
-                AffineTransform.getScaleInstance(0.9, 1d));
+        Font myFont = new Font(Font.MONOSPACED, Font.BOLD, 15).deriveFont(
+                AffineTransform.getScaleInstance(0.85, 1d));
         editor.setFont(myFont);
         editor.setOpaque(true);
         if (column > 0 && value != null && value.toString().length() > 13) {
@@ -39,10 +39,10 @@ class TableRenderer implements TableCellRenderer {
                     0, timeText.length() - 3);
             if (time.isAfter(timeValue)) {
                 editor.setBackground(new Color(210,120,105,200));
-                editor.setText('(' + substring + ')');
+                editor.setText(" (" + substring + ')');
             } else {
                 editor.setBackground(new Color(180,210,100,200));
-                editor.setText(substring);
+                editor.setText(' ' + substring);
             }
         } else if (value != null) {
             if ((row % 2) != 0) {

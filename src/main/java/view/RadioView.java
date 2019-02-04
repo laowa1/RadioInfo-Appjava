@@ -25,6 +25,8 @@ public class RadioView extends JFrame {
     private final JPanel glassPane;
     private final JTextField infoField;
     private final JLabel glassLabel1;
+    private final int f_HEIGHT = 640;
+    private final int f_WIDTH = 820;
     /**
      * Creates the view.
      * @param title of program
@@ -35,9 +37,6 @@ public class RadioView extends JFrame {
         contentPanel.setLayout(new BorderLayout());
 
         glassPane = (JPanel) this.getGlassPane();
-        //Minimum 400
-        int f_HEIGHT = 600;//Minimum 400
-        int f_WIDTH = 800;
         glassPane.setSize(f_WIDTH, f_HEIGHT);
         glassPane.setLayout(new BorderLayout());
         String loading = "/textures/loading.gif";
