@@ -38,23 +38,39 @@ public class InfoPanel extends JPanel {
         label = new JLabel(image2);
         label.setOpaque(true);
         label.setBackground(Color.WHITE);
-        info = new JTextArea();
-        info.append("Tryck på en kanal för att se information.");
-        info.setLineWrap(true);
-        info.setWrapStyleWord(true);
-        info.setEditable(false);
-        JScrollPane scrollPane = new JScrollPane(info);
-        scrollPane.setHorizontalScrollBarPolicy(
-                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scrollPane.setPreferredSize(new Dimension(200, 150));
+        info = setupTextArea();
         info.setFont(new Font("Sans", Font.PLAIN, 17));
-        //setPreferredSize(new Dimension(400,150));
+        JScrollPane scrollPane = setupScrollPane(info);
         add(label, BorderLayout.CENTER);
         add(scrollPane, BorderLayout.SOUTH);
         setVisible(true);
         setBackground(Color.WHITE);
     }
 
+    /**
+     * Setups a scroll pane.
+     * @return JScrollPane
+     */
+    private JScrollPane setupScrollPane(JTextArea info) {
+        JScrollPane scrollPane = new JScrollPane(info);
+        scrollPane.setHorizontalScrollBarPolicy(
+                JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPane.setPreferredSize(new Dimension(200, 150));
+        return scrollPane;
+    }
+
+    /**
+     * Setups a text area.
+     * @return JTextArea
+     */
+    private JTextArea setupTextArea() {
+        JTextArea textArea = new JTextArea();
+        textArea.append("Tryck på en kanal för att se information.");
+        textArea.setLineWrap(true);
+        textArea.setWrapStyleWord(true);
+        textArea.setEditable(false);
+        return textArea;
+    }
     /**
     * Sets info about program.
     */

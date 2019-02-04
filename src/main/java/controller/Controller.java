@@ -169,7 +169,7 @@ public class Controller {
         if (done) {
             for (int i = 0; i < cList.size(); i++) {
                 if (cList.get(i).getName().equals(programName)) {
-                    if (index <= cList.size()) {
+                    if (index <= cList.get(i).getProgramList().size()) {
                         try {
                             if (cList.get(i).getProgramList().get(index)
                                     .getImageURL() != null) {
@@ -185,7 +185,7 @@ public class Controller {
                                     "Error: Failed to load program image.");
                         }
                         if (cList.get(i).getProgramList().get(index)
-                                .getTagLine() != null) {
+                                .getTagLine().length() > 0) {
                             view.getInfoPanel().setDescription(cList.get(i)
                                     .getProgramList().get(index).getTagLine());
                         } else {

@@ -83,7 +83,9 @@ public class XMLParser {
             DocumentBuilder db = dbf.newDocumentBuilder();
             List<ProgramInfo> pList = new ArrayList<>();
             Document tempDoc = db.parse(url.openStream());
+            tempDoc.normalizeDocument();
             NodeList l = tempDoc.getElementsByTagName("scheduledepisode");
+
             for (int k = 0; k < l.getLength(); k++) {
                 Node n = l.item(k);
                 if (n.getNodeType() == Node.ELEMENT_NODE) {

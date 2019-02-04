@@ -25,8 +25,7 @@ public class RadioView extends JFrame {
     private final JPanel glassPane;
     private final JTextField infoField;
     private final JLabel glassLabel1;
-    private final int f_HEIGHT = 640;
-    private final int f_WIDTH = 820;
+
     /**
      * Creates the view.
      * @param title of program
@@ -37,7 +36,7 @@ public class RadioView extends JFrame {
         contentPanel.setLayout(new BorderLayout());
 
         glassPane = (JPanel) this.getGlassPane();
-        glassPane.setSize(f_WIDTH, f_HEIGHT);
+        //glassPane.setSize(640,840);
         glassPane.setLayout(new BorderLayout());
         String loading = "/textures/loading.gif";
         glassLabel1 = new JLabel(new ImageIcon(getClass()
@@ -53,13 +52,11 @@ public class RadioView extends JFrame {
         glassPane.setVisible(true);
         glassPane.setOpaque(true);
         glassPane.setBackground(Color.WHITE);
-
         topLabel = new JLabel();
         topLabel.setSize(70,300);
-        setMinimumSize(new Dimension(f_WIDTH, f_HEIGHT));
+        setMinimumSize(new Dimension(840,580));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         createPanels();
-        //table = new Table(2,12);
         menuBar = new MenuBar();
         northPanel.add(menuBar, BorderLayout.NORTH);
         northPanel.add(topLabel, BorderLayout.CENTER);
@@ -81,9 +78,8 @@ public class RadioView extends JFrame {
     private void createPanels() {
         northPanel = new JPanel(new BorderLayout());
         tablePanel = new TablePanel();
-        tablePanel.setPreferredSize(new Dimension(600, 600));
+        tablePanel.setPreferredSize(new Dimension(620, 300));
         infoPanel = new InfoPanel();
-        //tablePanel.setBackground(Color.WHITE);
         infoPanel.setPreferredSize(new Dimension(300,300));
     }
 
