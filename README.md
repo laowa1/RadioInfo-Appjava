@@ -1,5 +1,4 @@
 # RadioInfo-Appjava
-Labb 2 Appjava
 
 github clone https://github.com/laowa1/RadioInfo-Appjava.git
 
@@ -9,4 +8,4 @@ mvn package
 
 cd target
 
-java -jar maven-SNAPSHOT-1.0-jar-with-dependencies.jar
+java -jar maven-1.0-SNAPSHOT-jar-with-dependencies.jar
