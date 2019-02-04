@@ -222,9 +222,16 @@ public class Controller {
         view.stopLoadingOverlay();
         if (!done) {
             if (cList.size() > 0) {
-                programName = cList.get(0).getName();
-                view.setHeader(cList.get(0).getImageURL());
-                refreshTable(cList.get(0).getProgramList());
+                for (int i = 0; i < cList.size(); i++) {
+                    if (cList.get(i).getName().equals(programName)) {
+                        view.setHeader(cList.get(i).getImageURL());
+                        refreshTable(cList.get(i).getProgramList());
+                    } else if (programName == null) {
+                        view.setHeader(cList.get(0).getImageURL());
+                        refreshTable(cList.get(0).getProgramList());
+                        break;
+                    }
+                }
                 view.stopLoadingOverlay();
             }
         }
